@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# uninstall.sh — claude-toolkit
+# uninstall.sh — ai-code-kit
 # Gỡ skills + hooks, xóa hook config khỏi settings.json
 set -euo pipefail
 
@@ -13,7 +13,7 @@ ok()   { echo -e "${GREEN}✓${NC} $*"; }
 warn() { echo -e "${YELLOW}!${NC} $*"; }
 
 echo ""
-echo "claude-toolkit uninstaller"
+echo "ai-code-kit uninstaller"
 echo "──────────────────────────"
 
 # ── 1. Prereqs ────────────────────────────────────────────────────────────────

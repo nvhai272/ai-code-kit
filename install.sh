@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# install.sh — claude-toolkit
+# install.sh — ai-code-kit
 # Cài skills + hooks vào ~/.claude/, merge hook config vào settings.json
 set -euo pipefail
 
@@ -16,7 +16,7 @@ warn() { echo -e "${YELLOW}!${NC} $*"; }
 fail() { echo -e "${RED}✗${NC} $*"; exit 1; }
 
 echo ""
-echo "claude-toolkit installer v$(cat "$TOOLKIT_DIR/VERSION")"
+echo "ai-code-kit installer v$(cat "$TOOLKIT_DIR/VERSION")"
 echo "──────────────────────────────"
 
 # ── 1. Prereqs ────────────────────────────────────────────────────────────────

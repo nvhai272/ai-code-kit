@@ -1,4 +1,4 @@
-# claude-toolkit
+# ai-code-kit
 
 Bộ skills + hooks cá nhân cho [Claude Code](https://claude.ai/code), tối ưu cho Ubuntu/terminal.
 
@@ -28,10 +28,10 @@ Bộ skills + hooks cá nhân cho [Claude Code](https://claude.ai/code), tối �
 sudo apt install jq
 
 # 2. Clone toolkit
-git clone https://github.com/<your-username>/claude-toolkit.git ~/projects/claude-toolkit
+git clone https://github.com/<your-username>/ai-code-kit.git ~/projects/ai-code-kit
 
 # 3. Cài vào ~/.claude/
-cd ~/projects/claude-toolkit
+cd ~/projects/ai-code-kit
 bash install.sh
 ```
 
@@ -318,7 +318,7 @@ Mỗi khi mở session mới trong project có task đang `In Progress`:
 
 ```
 ---
-[claude-toolkit] Task đang In Progress:
+[ai-code-kit] Task đang In Progress:
   • feat-user-login — ST-3: Viết auth middleware | Next: test với Postman
 Tiếp tục với /plan-do để xem context đầy đủ.
 ---
@@ -527,20 +527,20 @@ git log --oneline main..HEAD    # hoặc develop..HEAD tuỳ base branch của p
 ### Push lần đầu
 
 ```bash
-cd ~/projects/claude-toolkit
+cd ~/projects/ai-code-kit
 
 # Dùng GitHub CLI (khuyến nghị)
-gh repo create claude-toolkit --public --source=. --remote=origin --push
+gh repo create ai-code-kit --public --source=. --remote=origin --push
 
 # Hoặc thủ công
-git remote add origin https://github.com/<username>/claude-toolkit.git
+git remote add origin https://github.com/<username>/ai-code-kit.git
 git push -u origin main
 ```
 
 ### Update toolkit
 
 ```bash
-cd ~/projects/claude-toolkit
+cd ~/projects/ai-code-kit
 git pull origin main
 bash install.sh    # cài lại version mới
 ```
@@ -551,4 +551,4 @@ Nếu bạn sửa skill global và muốn giữ khi update: đặt version riên
 
 ---
 
-*claude-toolkit v1.2.0*
+*ai-code-kit v1.2.0*

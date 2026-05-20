@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# session-init.sh — claude-toolkit
+# session-init.sh — ai-code-kit
 # Inject task đang In Progress vào đầu session để tránh "session amnesia"
 # UserPromptSubmit hook
 # Stdout output → inject vào context của user prompt
@@ -59,7 +59,7 @@ done < <(find "$TASKS_DIR" -maxdepth 2 -name "tracking.md" 2>/dev/null)
 # ── Output context ────────────────────────────────────────────────────────────
 echo ""
 echo "---"
-echo "[claude-toolkit] Task đang In Progress:"
+echo "[ai-code-kit] Task đang In Progress:"
 for item in "${ACTIVE[@]}"; do
   echo "  • $item"
 done

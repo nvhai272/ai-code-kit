@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# safety-guard.sh — claude-toolkit
+# safety-guard.sh — ai-code-kit
 # Block các lệnh Bash nguy hiểm trước khi chạy
 # PreToolUse hook → Bash
 # exit 0 = allow (có thể warn) | exit 2 = block

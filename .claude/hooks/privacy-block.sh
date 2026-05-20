@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# privacy-block.sh — claude-toolkit
+# privacy-block.sh — ai-code-kit
 # Block Claude đọc file nhạy cảm (.env, credentials, private keys)
 # PreToolUse hook → Read
 # exit 0 = allow | exit 2 = block
