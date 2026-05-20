@@ -23,6 +23,17 @@ git diff HEAD~3              # diff 3 commits gần nhất
 ```
 Đọc log, đọc file liên quan, grep error message trong codebase.
 
+**Với bug "dữ liệu sai" — bắt buộc trace cả 2 chiều:**
+- **Read path**: ai đọc dữ liệu và hiển thị ra? (query, render, format)
+- **Write path**: ai ghi dữ liệu vào? (create, update, import, seed)
+- Không loại trừ chiều nào trước khi có bằng chứng cụ thể.
+
+**Sau khi tìm ra pattern gây bug — bắt buộc grep toàn codebase:**
+```bash
+grep -rn "<pattern>" .   # tìm tất cả nơi dùng cùng pattern hoặc function liên quan trong toàn dự án
+```
+Mục tiêu: phát hiện các file khác mắc lỗi tương tự trong cùng lần debug.
+
 ## Phase 2 — HYPOTHESIZE: Đặt giả thuyết
 
 Liệt kê **top 3 nguyên nhân có thể** theo thứ tự khả năng cao nhất:
@@ -32,16 +43,29 @@ Liệt kê **top 3 nguyên nhân có thể** theo thứ tự khả năng cao nh�
 
 Bắt đầu với hypothesis khả năng cao nhất.
 
+**Với bug "dữ liệu sai" — hypothesis phải cover đủ 2 tầng:**
+- Tầng đọc: dữ liệu đúng trong DB nhưng bị query/transform/hiển thị sai?
+- Tầng ghi: dữ liệu đã bị lưu sai vào DB từ trước?
+
 ## Phase 3 — FIX: Sửa và verify
 
-**Trước khi sửa:**
+**Trước khi sửa — impact analysis (bắt buộc):**
 - Đọc toàn bộ file liên quan (không chỉ dòng lỗi)
 - Xác nhận root cause, không chỉ symptom
-- Thông báo files sẽ thay đổi → chờ xác nhận
+- Grep tất cả caller của function/method sẽ thay đổi:
+  ```bash
+  grep -rn "tên_function" .
+  ```
+- Với mỗi caller: xác định fix có thay đổi behavior của caller đó không
+- Nếu có caller bị ảnh hưởng ngoài ý muốn → điều chỉnh approach (thêm param optional, tạo method mới, v.v.)
+- Thông báo files sẽ thay đổi và phạm vi ảnh hưởng → chờ xác nhận
 
-**Sau khi sửa:**
+**Sau khi sửa — regression check (bắt buộc):**
 - Verify fix giải quyết đúng root cause
-- Kiểm tra không có regression (grep usages, chạy test nếu có)
+- Với mỗi caller đã tìm được ở impact analysis: xác nhận behavior không thay đổi ngoài ý muốn
+- Nếu project có test: chạy test bao phủ các caller đó (không chỉ test file vừa sửa)
+- Nếu không có test: thông báo rõ với user:
+  > "Các chức năng sau dùng code vừa sửa, cần kiểm tra thủ công: [danh sách caller]"
 - Nếu hypothesis sai → quay lại Phase 2 với hypothesis tiếp theo
 
 **Output tóm tắt:**

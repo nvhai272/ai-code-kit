@@ -6,17 +6,32 @@ description: Review code thay đổi trên branch hiện tại. Đánh giá ch�
 # Code Review
 
 ## Bước 1 — Thu thập thông tin
+
 ```bash
 git branch --show-current
-git diff main..HEAD --name-only
-git diff main..HEAD --stat
+git diff HEAD --stat
+BASE=$(git symbolic-ref refs/remotes/origin/HEAD 2>/dev/null | sed 's|refs/remotes/origin/||' || echo main)
+git diff $BASE...HEAD --stat
 ```
+
+**Auto-detect mode:**
+- Nếu `git diff HEAD` có output → **Working tree mode**: review uncommitted changes
+- Nếu không có uncommitted changes → **Branch mode**: review tất cả commits trên branch so với base branch (`$BASE`)
+
 Đọc `ai-code-kit/tasks/{branch-slug}/spec.md` nếu có để hiểu scope và acceptance criteria.
 
 ## Bước 2 — Đọc code thay đổi
+
+**Working tree mode** (có uncommitted changes):
 ```bash
-git diff main..HEAD
+git diff HEAD
 ```
+
+**Branch mode** (không có uncommitted changes):
+```bash
+git diff $BASE...HEAD
+```
+
 Dùng Read để đọc đầy đủ context từng file (không chỉ diff).
 Dùng Grep để tìm usages, kiểm tra breaking changes.
 

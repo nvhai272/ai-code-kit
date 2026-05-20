@@ -203,7 +203,7 @@ Hoặc gõ feedback để AI điều chỉnh trước khi tiếp tục.
 ```
 /review
 ```
-Tự detect branch, so sánh với `main`.
+Tự detect branch và base branch — review uncommitted changes hoặc toàn bộ commits trên branch.
 
 **Output 3 mức:**
 - 🔴 **CRITICAL** — phải sửa trước khi merge (logic sai, security, data loss)
@@ -253,7 +253,7 @@ Sau đó chạy `/plan-edit` để generate plan dựa trên findings này.
 **3 phases:**
 1. **Observe** — thu thập symptoms, reproduction steps, môi trường
 2. **Hypothesize** — đặt top 3 nguyên nhân có thể, sắp xếp theo xác suất
-3. **Fix** — verify root cause trước khi sửa, kiểm tra không regress
+3. **Fix** — impact analysis callers, verify root cause, regression check callers và test bao phủ (hoặc thông báo danh sách cần test thủ công)
 
 **Nguyên tắc:** Không sửa nhiều thứ cùng lúc — 1 hypothesis → 1 fix → 1 verify.
 
@@ -513,10 +513,11 @@ status: Approved    ← phải là Approved, không phải Draft
 ```
 Nếu vẫn là `Draft` → chạy `/plan-edit` và gõ `"ok"` để approve.
 
-### `git diff main..HEAD` trong `/review` không có output
-Branch chưa có commit so với main. Commit ít nhất 1 lần trước khi review:
+### `/review` không có output
+- **Có uncommitted changes**: `/review` tự dùng working tree mode — không cần commit
+- **Không có uncommitted changes**: cần ít nhất 1 commit trên branch so với base branch:
 ```bash
-git log --oneline main..HEAD    # kiểm tra có commit không
+git log --oneline main..HEAD    # hoặc develop..HEAD tuỳ base branch của project
 ```
 
 ---
@@ -550,4 +551,4 @@ Nếu bạn sửa skill global và muốn giữ khi update: đặt version riên
 
 ---
 
-*claude-toolkit v1.1.0*
+*claude-toolkit v1.2.0*
