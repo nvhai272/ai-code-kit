@@ -1,0 +1,22 @@
+# OS
+.DS_Store
+Thumbs.db
+*.swp
+*~
+
+# Secrets — không bao giờ commit
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.p12
+*.pfx
+credentials.json
+service-account*.json
+
+# Backup files tạo bởi install.sh
+*.bak.*
+
+# Logs
+*.log
