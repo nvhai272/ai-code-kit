@@ -6,7 +6,7 @@ description: Thực hiện task từ spec.md theo thứ tự subtask. Dùng sau 
 # Thực Hiện Implementation
 
 ## Bước 1 — Đọc task
-`git branch --show-current` → tìm `.dw/tasks/{branch-slug}/`:
+`git branch --show-current` → tìm `ai-code-kit/tasks/{branch-slug}/`:
 - Không có → *"Chạy `/plan` trước."* → Dừng
 - Subtasks trống → *"Chạy `/plan-edit` trước."* → Dừng
 - `status` chưa `Approved` → *"Plan chưa được approve."* → Dừng

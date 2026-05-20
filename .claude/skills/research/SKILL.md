@@ -19,7 +19,7 @@ allowed-tools:
 Task: **$ARGUMENTS**
 
 ## Bước 1 — Đọc task context
-Tìm `.dw/tasks/{slug}/spec.md` nếu đã có. Đọc `## Intent` để hiểu mục tiêu.
+Tìm `ai-code-kit/tasks/{slug}/spec.md` nếu đã có. Đọc `## Intent` để hiểu mục tiêu.
 
 ## Bước 2 — Scan codebase
 

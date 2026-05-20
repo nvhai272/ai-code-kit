@@ -10,7 +10,7 @@ argument-hint: "[task-name — mặc định dùng branch hiện tại]"
 - Nếu có `$ARGUMENTS` → dùng làm task slug
 - Nếu không → `git branch --show-current` → slug
 
-Tìm `.dw/tasks/{slug}/tracking.md`:
+Tìm `ai-code-kit/tasks/{slug}/tracking.md`:
 - Không có → *"Không tìm thấy task. Chạy `/plan` trước."* → Dừng
 
 ## Bước 2 — Thu thập trạng thái hiện tại
@@ -48,7 +48,7 @@ Cập nhật frontmatter `last_updated`.
 
 ## Bước 4 — Tóm tắt cho user
 ```
-✅ Handoff saved → .dw/tasks/{slug}/tracking.md
+✅ Handoff saved → ai-code-kit/tasks/{slug}/tracking.md
 
 Khi quay lại: chạy /plan-do để tiếp tục từ {ST-N}
 ```

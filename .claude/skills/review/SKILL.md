@@ -11,7 +11,7 @@ git branch --show-current
 git diff main..HEAD --name-only
 git diff main..HEAD --stat
 ```
-Đọc `.dw/tasks/{branch-slug}/spec.md` nếu có để hiểu scope và acceptance criteria.
+Đọc `ai-code-kit/tasks/{branch-slug}/spec.md` nếu có để hiểu scope và acceptance criteria.
 
 ## Bước 2 — Đọc code thay đổi
 ```bash

@@ -6,7 +6,7 @@ description: Đọc Intent trong spec.md và generate Subtasks, Risks, Success C
 # Lập Kế Hoạch Implementation
 
 ## Bước 1 — Đọc task
-`git branch --show-current` → tìm `.dw/tasks/{branch-slug}/spec.md` + `tracking.md`.
+`git branch --show-current` → tìm `ai-code-kit/tasks/{branch-slug}/spec.md` + `tracking.md`.
 - Không có file → *"Chạy `/plan` trước."* → Dừng
 - `## Intent` trống → *"Nhập mô tả vào ## Intent trong spec.md trước."* → Dừng
 - **`## Intent` là vùng cấm — chỉ đọc, không bao giờ sửa.**

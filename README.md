@@ -41,7 +41,7 @@ bash install.sh
 - Copy 3 hooks → `~/.claude/hooks/`
 - Merge hook config → `~/.claude/settings.json`
 
-Gỡ cài đặt: `bash uninstall.sh` (không xóa task data trong `.dw/tasks/`)
+Gỡ cài đặt: `bash uninstall.sh` (không xóa task data trong `ai-code-kit/tasks/`)
 
 ---
 
@@ -77,7 +77,7 @@ git checkout -b feat/user-login
 
 # Bước 2: Khởi tạo task
 /plan
-# → Tạo .dw/tasks/feat-user-login/spec.md + tracking.md
+# → Tạo ai-code-kit/tasks/feat-user-login/spec.md + tracking.md
 
 # Bước 3: Nhập mô tả vào spec.md → ## Intent
 # "Thêm luồng đăng nhập bằng email/password với JWT token,
@@ -139,7 +139,7 @@ git checkout -b feat/user-login
 ```
 Không cần argument — tự detect branch hiện tại.
 
-**Output:** Tạo 2 files trong `.dw/tasks/{branch-slug}/`:
+**Output:** Tạo 2 files trong `ai-code-kit/tasks/{branch-slug}/`:
 - `spec.md` — chứa Intent (bạn điền), Scope, Risks, Success Criteria
 - `tracking.md` — bảng tiến độ subtasks, changelog, handoff notes
 
@@ -389,7 +389,7 @@ Chỉ inject **một lần** mỗi session (không spam mỗi prompt).
 
 ## Cấu trúc task files
 
-Mỗi task tạo ra 2 files trong `.dw/tasks/{branch-slug}/`:
+Mỗi task tạo ra 2 files trong `ai-code-kit/tasks/{branch-slug}/`:
 
 ### `spec.md` — Stable sau approve
 

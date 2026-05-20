@@ -25,9 +25,9 @@ SESSION_MARKER="/tmp/ct-session-${SESSION_ID}"
 [ -f "$SESSION_MARKER" ] && exit 0
 touch "$SESSION_MARKER" 2>/dev/null || true
 
-# ── Scan .dw/tasks/ tìm tasks In Progress (v2 format) ────────────────────────
+# ── Scan ai-code-kit/tasks/ tìm tasks In Progress (v2 format) ────────────────────────
 PROJECT_DIR="${CLAUDE_PROJECT_DIR:-$(pwd)}"
-TASKS_DIR="$PROJECT_DIR/.dw/tasks"
+TASKS_DIR="$PROJECT_DIR/ai-code-kit/tasks"
 
 [ ! -d "$TASKS_DIR" ] && exit 0
 

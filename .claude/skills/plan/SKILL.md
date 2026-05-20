@@ -1,6 +1,6 @@
 ---
 name: plan
-description: Khởi tạo task mới cho branch hiện tại. Tạo spec.md + tracking.md trong .dw/tasks/. Dùng khi bắt đầu feature hoặc task mới.
+description: Khởi tạo task mới cho branch hiện tại. Tạo spec.md + tracking.md trong ai-code-kit/tasks/. Dùng khi bắt đầu feature hoặc task mới.
 ---
 
 # Khởi Tạo Task
@@ -10,12 +10,12 @@ Chạy `git branch --show-current`. Dùng tên branch làm task slug: thay `/` �
 Hỏi: **"Dùng `{branch-slug}` làm tên task không?"**
 
 ## Bước 2 — Kiểm tra đã tồn tại
-- Có `.dw/tasks/{branch-slug}/` → Báo: *"Task đã tồn tại. Dùng `/plan-edit` để chỉnh hoặc `/plan-do` để tiếp tục."* → Dừng
-- Chưa có → tạo thư mục `.dw/tasks/{branch-slug}/`
+- Có `ai-code-kit/tasks/{branch-slug}/` → Báo: *"Task đã tồn tại. Dùng `/plan-edit` để chỉnh hoặc `/plan-do` để tiếp tục."* → Dừng
+- Chưa có → tạo thư mục `ai-code-kit/tasks/{branch-slug}/`
 
 ## Bước 3 — Tạo spec.md
 ```
-.dw/tasks/{branch-slug}/spec.md
+ai-code-kit/tasks/{branch-slug}/spec.md
 ```
 Nội dung:
 ```markdown
@@ -43,7 +43,7 @@ depth: standard
 
 ## Bước 4 — Tạo tracking.md
 ```
-.dw/tasks/{branch-slug}/tracking.md
+ai-code-kit/tasks/{branch-slug}/tracking.md
 ```
 Nội dung:
 ```markdown
@@ -68,8 +68,8 @@ status: Not Started
 ## Bước 5 — Hướng dẫn tiếp theo
 ```
 ✅ Tạo xong:
-  .dw/tasks/{branch-slug}/spec.md
-  .dw/tasks/{branch-slug}/tracking.md
+  ai-code-kit/tasks/{branch-slug}/spec.md
+  ai-code-kit/tasks/{branch-slug}/tracking.md
 
 → Mở spec.md, nhập mô tả vào ## Intent
 → Chạy /plan-edit để generate subtasks
