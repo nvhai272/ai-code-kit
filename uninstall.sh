@@ -5,7 +5,7 @@ set -euo pipefail
 
 CLAUDE_DIR="$HOME/.claude"
 SETTINGS="$CLAUDE_DIR/settings.json"
-TOOLKIT_SKILLS=(plan plan-edit plan-do review commit debug think handoff research)
+TOOLKIT_SKILLS=(plan plan-edit plan-do review debug think research)
 TOOLKIT_HOOKS=(privacy-block.sh safety-guard.sh session-init.sh)
 
 GREEN='\033[0;32m'; YELLOW='\033[1;33m'; NC='\033[0m'
@@ -68,5 +68,5 @@ fi
 echo ""
 echo "──────────────────────────────"
 echo -e "${GREEN}Gỡ cài đặt hoàn tất.${NC}"
-warn "Dữ liệu task (.dw/tasks/) trong các project KHÔNG bị xóa."
+warn "Dữ liệu task (ai-code-kit/tasks/) trong các project KHÔNG bị xóa."
 echo ""

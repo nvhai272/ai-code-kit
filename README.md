@@ -37,7 +37,7 @@ bash install.sh
 
 `install.sh` sẽ:
 - Backup skills cũ → `~/.claude/skills.bak.YYYYMMDDHHMMSS/`
-- Copy 9 skills → `~/.claude/skills/`
+- Copy 7 skills → `~/.claude/skills/`
 - Copy 3 hooks → `~/.claude/hooks/`
 - Merge hook config → `~/.claude/settings.json`
 
@@ -60,13 +60,12 @@ Gỡ cài đặt: `bash uninstall.sh` (không xóa task data trong `ai-code-kit/
       ↓                                   ↓
   [approve]                           /plan-do ←──┐
       ↓                                   ↓       │
-  /plan-do ←──┐                        /review    │
-      ↓       │ (subtask tiếp)            ↓       │ (subtask tiếp)
-   /review    │                        /commit    │
-      ↓       │                                   │
-  /commit ────┘                                   │
-                                                  └──
-Bất kỳ lúc nào:  /debug · /think · /handoff
+  /plan-do ←──┐                        /review    │ (subtask tiếp)
+      ↓       │ (subtask tiếp)                    │
+   /review    │                                   └──
+              └──
+
+Bất kỳ lúc nào:  /debug · /think
 ```
 
 ### Ví dụ thực tế: Feature "thêm tính năng đăng nhập"
@@ -101,19 +100,11 @@ git checkout -b feat/user-login
 /review
 # → Báo cáo CRITICAL / WARNING / SUGGESTION
 
-# Bước 8: Commit & push
-/commit
-# → Tạo conventional commit, hỏi push
-
 # Khi cần debug:
 /debug "JWT token bị expire sớm hơn 7 ngày"
 
 # Khi cần nghĩ sâu hơn:
 /think "Nên dùng refresh token hay sliding session?"
-
-# Cuối ngày / chuyển task:
-/handoff
-# → Lưu context vào tracking.md
 ```
 
 ### Quy tắc quan trọng
@@ -123,7 +114,7 @@ git checkout -b feat/user-login
 | Mỗi subtask chờ xác nhận trước khi sang cái tiếp | Tránh AI tự ý làm quá scope |
 | `## Intent` trong spec.md không bao giờ bị sửa | Là nguồn gốc, không được drift |
 | Subtask đã Done không bị xóa | Lịch sử không thể xóa |
-| Không commit khi chưa có xác nhận | Tránh commit nhầm |
+| Mỗi subtask chờ xác nhận trước khi commit | Tránh commit nhầm |
 
 ---
 
@@ -221,39 +212,10 @@ Tự detect branch, so sánh với `main`.
 
 **Sau review:**
 - Có Critical → sửa xong chạy lại `/review`
-- Chỉ Warning → có thể chạy `/commit`, ghi nhận warning
-- Pass → chạy `/commit`
+- Chỉ Warning → có thể commit, ghi nhận warning
+- Pass → approved, commit
 
 **Lưu ý:** Review chỉ đọc và báo cáo — không tự sửa code.
-
----
-
-### `/commit` — Commit & push
-
-**Khi dùng:** Sau khi review passed.
-
-**Cách dùng:**
-```
-/commit
-```
-Hoặc truyền message gợi ý:
-```
-/commit feat: add user login
-```
-
-**Quá trình:**
-1. `git status` → xác nhận có changes
-2. Hỏi stage tất cả hay chọn file
-3. Đọc diff → suggest commit message (Conventional Commits)
-4. Hiển thị message → **chờ xác nhận**
-5. Commit → hỏi push → push nếu đồng ý
-
-**Format commit:**
-```
-feat(auth): add JWT login endpoint
-
-Co-Authored-By: Claude <noreply@anthropic.com>
-```
 
 ---
 
@@ -316,27 +278,6 @@ Sau đó chạy `/plan-edit` để generate plan dựa trên findings này.
 
 ---
 
-### `/handoff` — Bàn giao session
-
-**Khi dùng:** Cuối ngày làm việc, khi phải chuyển sang task khác, hoặc muốn lưu context trước khi đóng terminal.
-
-**Cách dùng:**
-```
-/handoff
-/handoff feat-user-login   # nếu muốn chỉ định task cụ thể
-```
-
-**Ghi vào `tracking.md`:**
-- Đã làm gì trong session này
-- Đang ở subtask nào
-- Files đang dở
-- **Bước tiếp theo cụ thể** (để session sau không phải nhớ lại)
-- Context, quyết định đã đưa ra, cạm bẫy đã gặp
-
-**Session sau:** Hook `session-init` tự động đọc handoff và inject vào đầu conversation.
-
----
-
 ## Hooks — Chạy tự động
 
 Hooks chạy **trong background**, không cần gọi thủ công, không tốn token context.
@@ -379,7 +320,7 @@ Mỗi khi mở session mới trong project có task đang `In Progress`:
 ---
 [claude-toolkit] Task đang In Progress:
   • feat-user-login — ST-3: Viết auth middleware | Next: test với Postman
-Tiếp tục với /plan-do hoặc /handoff để xem context đầy đủ.
+Tiếp tục với /plan-do để xem context đầy đủ.
 ---
 ```
 
@@ -504,24 +445,6 @@ description: Review code Laravel. Extends global review với PHP-specific check
 - Response không wrap trong Resource class
 ```
 
-### Ví dụ: Override `/commit` để thêm ticket number
-
-```markdown
----
-name: commit
-description: Commit với Jira ticket number. Override global commit.
----
-
-# Smart Commit (with Jira)
-
-<!-- Copy nội dung global commit, sửa format message: -->
-
-## Bước 3 — Tạo commit message
-Format: `<type>(<scope>): [PROJ-XXX] <mô tả>`
-
-Lấy ticket từ branch name: `feat/PROJ-123-user-login` → `PROJ-123`
-```
-
 ### Ví dụ: Tắt hook cho project cụ thể
 
 Tạo `.claude/settings.json` trong project:
@@ -627,4 +550,4 @@ Nếu bạn sửa skill global và muốn giữ khi update: đặt version riên
 
 ---
 
-*claude-toolkit v1.0.0*
+*claude-toolkit v1.1.0*

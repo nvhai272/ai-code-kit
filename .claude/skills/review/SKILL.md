@@ -76,7 +76,7 @@ Dùng Grep để tìm usages, kiểm tra breaking changes.
 
 ## Sau review
 - Critical → "Cần fix trước khi merge. Sau khi fix chạy lại `/review`."
-- Chỉ Warning → "Khuyến khích fix, nhưng có thể proceed với `/commit`."
-- Pass → "Approved — chạy `/commit`."
+- Chỉ Warning → "Khuyến khích fix, nhưng có thể proceed và commit."
+- Pass → "Approved — có thể commit."
 
 **Giới hạn:** Chỉ đọc và báo cáo — KHÔNG tự sửa code.
