@@ -51,7 +51,29 @@ Thông báo subtask tiếp theo (nếu còn).
 2. Ghi vào Changelog: `Phát Hiện: {vấn đề}`
 3. Báo user, chờ quyết định — không tự mở rộng scope
 
-**Quy tắc bất biến:**
-- Xong 1 ST → dừng, chờ xác nhận
-- Không tick khi chưa có xác nhận
-- Không sửa `## Intent` trong spec.md
+## ⚖️ IRON LAWS — KHÔNG BAO GIỜ VI PHẠM
+
+1. **XONG 1 ST → DỪNG. CHỜ USER GÕ "ok" / "tiếp" / "được".**
+2. **KHÔNG TÍCH `✅ Done` TRƯỚC KHI USER XÁC NHẬN.**
+3. **KHÔNG SỬA `## Intent` TRONG spec.md — kể cả thêm dấu chấm.**
+4. **PHÁT HIỆN NGOÀI SCOPE → DỪNG, BÁO, CHỜ — KHÔNG TỰ MỞ RỘNG.**
+
+## 🚩 Red Flags — Lý lẽ Claude hay dùng để phá luật
+
+| Claude tự nhủ | Phản biện đúng |
+|---|---|
+| "User im lặng = ngầm đồng ý, làm ST tiếp" | Im lặng ≠ ok. Hỏi rõ. |
+| "Acceptance có vẻ pass, tick Done cho gọn" | Chờ user verify. |
+| "Intent thiếu 1 chi tiết, bổ sung 1 dòng" | Intent là vùng cấm. Báo user. |
+| "Tiện tay fix typo / dead code ngoài scope" | Note vào Changelog, KHÔNG fix. |
+| "ST này nhỏ, gộp ST tiếp cho gọn" | 1 ST = 1 stop. |
+| "Project không có test, skip phần test" | Báo "cần manual test [list]" — không skip âm thầm. |
+| "Grep callers tốn thời gian, skip vì thay đổi nhỏ" | Không skip. Impact analysis là bắt buộc. |
+
+## Gotchas
+
+- ❌ Chạy test command mà không kiểm tra project có config test không (`package.json scripts.test`, `Makefile`, `pytest.ini`...) → có thể chạy nhầm command sai
+- ❌ Khi user feedback giữa chừng "à thêm cái X", coi đó là ST mới → KHÔNG: hỏi user "thêm vào ST hiện tại hay tạo ST mới?"
+- ❌ Quên cập nhật `last_updated` trong frontmatter tracking.md sau khi tick Done
+- ❌ Báo cáo "Files đã thay đổi" thiếu file (chỉ liệt kê file edit, quên file create/delete)
+- ❌ Đọc spec.md nhưng bỏ qua `## Research Findings` → mất context quan trọng từ `/research`

@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.2.1] — 2026-05-22
+
+### Added
+- `/plan-do`: Iron Laws + Red Flags table (chống Claude drift behavior)
+- `/plan-do`, `/debug`, `/review`: section Gotchas (best practice từ Anthropic — chống lỗi phổ biến)
+
 ## [1.2.0] — 2026-05-20
 
 ### Changed

@@ -95,3 +95,13 @@ Dùng Grep để tìm usages, kiểm tra breaking changes.
 - Pass → "Approved — có thể commit."
 
 **Giới hạn:** Chỉ đọc và báo cáo — KHÔNG tự sửa code.
+
+## Gotchas
+
+- ❌ Phát hiện Critical → tự edit fix luôn → SAI: chỉ báo cáo, user quyết định
+- ❌ Review chỉ đọc diff lines, không Read đầy đủ context file → miss bug do code xung quanh
+- ❌ Báo "Approve" khi acceptance criteria trong `spec.md` chưa được verify từng cái
+- ❌ Bỏ qua check `## Out of Scope` — nếu diff chạm code ngoài scope thì phải flag
+- ❌ Chỉ check security pattern phổ biến (SQL injection, XSS) → miss logic bug, race condition, auth bypass
+- ❌ Chấm "Quality X/5" chủ quan không có evidence → kết luận yếu, user không action được
+- ❌ Branch mode dùng `git diff $BASE..HEAD` (two dots) thay vì `$BASE...HEAD` (three dots) → diff sai nếu base branch đã advance

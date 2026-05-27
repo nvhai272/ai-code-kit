@@ -77,3 +77,13 @@ Prevention: [cách tránh lần sau — nếu có]
 ```
 
 **Quy tắc:** Không sửa nhiều thứ cùng lúc — 1 hypothesis, 1 fix, 1 verify.
+
+## Gotchas
+
+- ❌ Fix symptom (NPE, undefined) bằng null-check mà chưa tìm tại sao null → bug ẩn, sẽ tái phát ở chỗ khác
+- ❌ Trace duy nhất 1 chiều (chỉ read path HOẶC chỉ write path) khi bug là "dữ liệu sai" → bỏ sót root cause ở chiều còn lại
+- ❌ Grep callers chỉ trong cùng file/module thay vì toàn dự án (`grep -rn "name" .`) → miss callers ở module khác
+- ❌ Tuyên bố "verified" bằng đọc code (static reasoning) thay vì RUN thật sự → fix có thể không hoạt động
+- ❌ Hypothesis dạng "có lẽ là race condition" nhưng không có evidence cụ thể → đoán mò, lãng phí thời gian
+- ❌ Tìm thấy 1 nguyên nhân → fix luôn mà không grep pattern tương tự ở file khác → để sót bug đồng dạng
+- ❌ Fix xong báo "done" mà không liệt kê callers cần manual test (khi project không có test)
