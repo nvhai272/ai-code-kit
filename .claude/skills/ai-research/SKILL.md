@@ -1,6 +1,6 @@
 ---
-name: research
-description: Khảo sát codebase trước khi lập kế hoạch. Tìm patterns, dependencies, và ảnh hưởng của thay đổi. Dùng trước /plan-edit khi task phức tạp.
+name: ai-research
+description: Khảo sát codebase trước khi lập kế hoạch. Tìm patterns, dependencies, và ảnh hưởng của thay đổi. Dùng trước /ai-plan-edit khi task phức tạp.
 argument-hint: "[task-name hoặc mô tả ngắn về thay đổi]"
 allowed-tools:
   - Read
@@ -78,4 +78,4 @@ Thêm vào section `## Research Findings`:
 
 ## Bước 5 — Tóm tắt
 Báo cáo ngắn: scope thật sự là gì, rủi ro chính, đề xuất tiếp theo.
-→ *"Chạy `/plan-edit` để lập kế hoạch dựa trên research này."*
+→ *"Chạy `/ai-plan-edit` để lập kế hoạch dựa trên research này."*

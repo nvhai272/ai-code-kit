@@ -1,5 +1,5 @@
 ---
-name: think
+name: ai-think
 description: Áp dụng framework tư duy phản biện trước khi quyết định hoặc implement. Dùng khi task phức tạp, có nhiều hướng, hoặc có rủi ro cao.
 argument-hint: "[vấn đề cần phân tích]"
 user-invocable: true

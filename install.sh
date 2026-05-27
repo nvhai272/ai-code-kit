@@ -30,6 +30,16 @@ if [ -d "$CLAUDE_DIR/skills" ]; then
   warn "Backup skills cũ → $BACKUP"
 fi
 
+# ── 2b. Xóa skills cũ (tên cũ trước khi đổi prefix) ──────────────────────────
+LEGACY_SKILLS=(plan plan-edit plan-do review debug think research)
+for legacy in "${LEGACY_SKILLS[@]}"; do
+  legacy_dir="$CLAUDE_DIR/skills/$legacy"
+  if [ -d "$legacy_dir" ]; then
+    rm -rf "$legacy_dir"
+    warn "Removed legacy skill: $legacy"
+  fi
+done
+
 # ── 3. Copy skills ────────────────────────────────────────────────────────────
 mkdir -p "$CLAUDE_DIR/skills"
 INSTALLED_SKILLS=()
@@ -90,5 +100,5 @@ echo "  safety-guard   — block lệnh nguy hiểm"
 echo "  session-init   — inject task đang In Progress khi mở session"
 echo ""
 echo "Workflow gợi ý:"
-echo "  /research → /plan → /plan-edit → approve → /plan-do → /review"
+echo "  /ai-research → /ai-plan → /ai-plan-edit → approve → /ai-plan-do → /ai-review"
 echo ""

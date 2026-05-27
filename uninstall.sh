@@ -5,7 +5,7 @@ set -euo pipefail
 
 CLAUDE_DIR="$HOME/.claude"
 SETTINGS="$CLAUDE_DIR/settings.json"
-TOOLKIT_SKILLS=(plan plan-edit plan-do review debug think research)
+TOOLKIT_SKILLS=(ai-plan ai-plan-edit ai-plan-do ai-review ai-debug ai-think ai-research)
 TOOLKIT_HOOKS=(privacy-block.sh safety-guard.sh session-init.sh)
 
 GREEN='\033[0;32m'; YELLOW='\033[1;33m'; NC='\033[0m'

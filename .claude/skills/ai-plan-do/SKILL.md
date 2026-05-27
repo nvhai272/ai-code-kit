@@ -1,5 +1,5 @@
 ---
-name: plan-do
+name: ai-plan-do
 description: Thực hiện task từ spec.md theo thứ tự subtask. Dùng sau khi plan đã được approve.
 ---
 
@@ -7,8 +7,8 @@ description: Thực hiện task từ spec.md theo thứ tự subtask. Dùng sau 
 
 ## Bước 1 — Đọc task
 `git branch --show-current` → tìm `ai-code-kit/tasks/{branch-slug}/`:
-- Không có → *"Chạy `/plan` trước."* → Dừng
-- Subtasks trống → *"Chạy `/plan-edit` trước."* → Dừng
+- Không có → *"Chạy `/ai-plan` trước."* → Dừng
+- Subtasks trống → *"Chạy `/ai-plan-edit` trước."* → Dừng
 - `status` chưa `Approved` → *"Plan chưa được approve."* → Dừng
 - Tất cả ✅ Done → *"Tất cả subtasks đã hoàn thành."* → Dừng
 
@@ -32,7 +32,7 @@ Chỉ sửa đúng scope subtask — không động code ngoài.
 Files đã thay đổi: [danh sách]
 Acceptance: [x] đã đạt / [ ] chưa check
 
-→ /review để review code, hoặc "ok" để tiếp tục.
+→ /ai-review để review code, hoặc "ok" để tiếp tục.
 ```
 **KHÔNG tự làm subtask tiếp theo khi chưa có xác nhận.**
 
@@ -76,4 +76,4 @@ Thông báo subtask tiếp theo (nếu còn).
 - ❌ Khi user feedback giữa chừng "à thêm cái X", coi đó là ST mới → KHÔNG: hỏi user "thêm vào ST hiện tại hay tạo ST mới?"
 - ❌ Quên cập nhật `last_updated` trong frontmatter tracking.md sau khi tick Done
 - ❌ Báo cáo "Files đã thay đổi" thiếu file (chỉ liệt kê file edit, quên file create/delete)
-- ❌ Đọc spec.md nhưng bỏ qua `## Research Findings` → mất context quan trọng từ `/research`
+- ❌ Đọc spec.md nhưng bỏ qua `## Research Findings` → mất context quan trọng từ `/ai-research`

@@ -52,20 +52,20 @@ Gỡ cài đặt: `bash uninstall.sh` (không xóa task data trong `ai-code-kit/
 ```
 [task phức tạp]                    [task đơn giản]
       ↓                                   ↓
-  /research                            /plan
+  /ai-research                            /ai-plan
       ↓                                   ↓
-    /plan  ──────────────────────────  /plan-edit
+    /ai-plan  ──────────────────────────  /ai-plan-edit
       ↓                                   ↓
-  /plan-edit                          [approve]
+  /ai-plan-edit                          [approve]
       ↓                                   ↓
-  [approve]                           /plan-do ←──┐
+  [approve]                           /ai-plan-do ←──┐
       ↓                                   ↓       │
-  /plan-do ←──┐                        /review    │ (subtask tiếp)
+  /ai-plan-do ←──┐                        /ai-review    │ (subtask tiếp)
       ↓       │ (subtask tiếp)                    │
-   /review    │                                   └──
+   /ai-review    │                                   └──
               └──
 
-Bất kỳ lúc nào:  /debug · /think
+Bất kỳ lúc nào:  /ai-debug · /ai-think
 ```
 
 ### Ví dụ thực tế: Feature "thêm tính năng đăng nhập"
@@ -75,7 +75,7 @@ Bất kỳ lúc nào:  /debug · /think
 git checkout -b feat/user-login
 
 # Bước 2: Khởi tạo task
-/plan
+/ai-plan
 # → Tạo ai-code-kit/tasks/feat-user-login/spec.md + tracking.md
 
 # Bước 3: Nhập mô tả vào spec.md → ## Intent
@@ -83,28 +83,28 @@ git checkout -b feat/user-login
 #  bảo vệ các route cần auth, lưu session 7 ngày."
 
 # Bước 4: Research codebase (nếu project lớn)
-/research feat-user-login
+/ai-research feat-user-login
 # → Scan auth patterns, existing middleware, DB schema
 
 # Bước 5: Generate plan
-/plan-edit
+/ai-plan-edit
 # → Sinh ST-1 đến ST-N, risks, success criteria
 # → Hiển thị plan, CHỜ bạn gõ "ok"
 
 # Bước 6: Implement từng subtask
-/plan-do
+/ai-plan-do
 # → Làm ST-1, dừng lại, chờ xác nhận
 # → Làm ST-2, dừng lại, chờ xác nhận...
 
 # Bước 7: Review code
-/review
+/ai-review
 # → Báo cáo CRITICAL / WARNING / SUGGESTION
 
 # Khi cần debug:
-/debug "JWT token bị expire sớm hơn 7 ngày"
+/ai-debug "JWT token bị expire sớm hơn 7 ngày"
 
 # Khi cần nghĩ sâu hơn:
-/think "Nên dùng refresh token hay sliding session?"
+/ai-think "Nên dùng refresh token hay sliding session?"
 ```
 
 ### Quy tắc quan trọng
@@ -120,13 +120,13 @@ git checkout -b feat/user-login
 
 ## Skills — Hướng dẫn chi tiết
 
-### `/plan` — Khởi tạo task
+### `/ai-plan` — Khởi tạo task
 
 **Khi dùng:** Bắt đầu một feature/bugfix mới, chưa có task docs.
 
 **Cách dùng:**
 ```
-/plan
+/ai-plan
 ```
 Không cần argument — tự detect branch hiện tại.
 
@@ -134,18 +134,18 @@ Không cần argument — tự detect branch hiện tại.
 - `spec.md` — chứa Intent (bạn điền), Scope, Risks, Success Criteria
 - `tracking.md` — bảng tiến độ subtasks, changelog, handoff notes
 
-**Sau đó:** Mở `spec.md`, viết mô tả vào `## Intent`, rồi chạy `/plan-edit`.
+**Sau đó:** Mở `spec.md`, viết mô tả vào `## Intent`, rồi chạy `/ai-plan-edit`.
 
 ---
 
-### `/plan-edit` — Generate kế hoạch
+### `/ai-plan-edit` — Generate kế hoạch
 
 **Khi dùng:** Sau khi đã nhập Intent, muốn AI generate subtasks + risks.  
 Cũng dùng để **cập nhật plan** khi scope thay đổi giữa chừng.
 
 **Cách dùng:**
 ```
-/plan-edit
+/ai-plan-edit
 ```
 
 **Quá trình AI làm:**
@@ -161,13 +161,13 @@ Cũng dùng để **cập nhật plan** khi scope thay đổi giữa chừng.
 
 ---
 
-### `/plan-do` — Thực hiện
+### `/ai-plan-do` — Thực hiện
 
 **Khi dùng:** Sau khi plan đã approved, muốn AI implement từng subtask.
 
 **Cách dùng:**
 ```
-/plan-do
+/ai-plan-do
 ```
 
 **Quá trình:**
@@ -184,9 +184,9 @@ Hoặc gõ feedback để AI điều chỉnh trước khi tiếp tục.
 
 ---
 
-### `/plan-edit` và `/plan-do` — Phân biệt
+### `/ai-plan-edit` và `/ai-plan-do` — Phân biệt
 
-| | `/plan-edit` | `/plan-do` |
+| | `/ai-plan-edit` | `/ai-plan-do` |
 |---|---|---|
 | Làm gì | Phân tích + viết plan | Implement code |
 | Chạm vào code | Không | Có |
@@ -195,13 +195,13 @@ Hoặc gõ feedback để AI điều chỉnh trước khi tiếp tục.
 
 ---
 
-### `/review` — Code review
+### `/ai-review` — Code review
 
 **Khi dùng:** Sau khi implement xong (một subtask hoặc cả task), trước khi commit/merge.
 
 **Cách dùng:**
 ```
-/review
+/ai-review
 ```
 Tự detect branch và base branch — review uncommitted changes hoặc toàn bộ commits trên branch.
 
@@ -211,7 +211,7 @@ Tự detect branch và base branch — review uncommitted changes hoặc toàn b
 - 🔵 **SUGGESTION** — cân nhắc (refactor, naming, style)
 
 **Sau review:**
-- Có Critical → sửa xong chạy lại `/review`
+- Có Critical → sửa xong chạy lại `/ai-review`
 - Chỉ Warning → có thể commit, ghi nhận warning
 - Pass → approved, commit
 
@@ -219,14 +219,14 @@ Tự detect branch và base branch — review uncommitted changes hoặc toàn b
 
 ---
 
-### `/research` — Khảo sát codebase
+### `/ai-research` — Khảo sát codebase
 
-**Khi dùng:** Trước `/plan-edit` khi task phức tạp, chạm nhiều files, hoặc bạn chưa quen codebase.
+**Khi dùng:** Trước `/ai-plan-edit` khi task phức tạp, chạm nhiều files, hoặc bạn chưa quen codebase.
 
 **Cách dùng:**
 ```
-/research feat-user-login
-/research "thêm payment gateway"
+/ai-research feat-user-login
+/ai-research "thêm payment gateway"
 ```
 
 **AI làm gì:**
@@ -236,18 +236,18 @@ Tự detect branch và base branch — review uncommitted changes hoặc toàn b
 - Phát hiện cạm bẫy, conventions cần follow
 
 **Output:** Ghi vào `spec.md` section `## Research Findings`.  
-Sau đó chạy `/plan-edit` để generate plan dựa trên findings này.
+Sau đó chạy `/ai-plan-edit` để generate plan dựa trên findings này.
 
 ---
 
-### `/debug` — Debug có hệ thống
+### `/ai-debug` — Debug có hệ thống
 
 **Khi dùng:** Gặp lỗi, test fail, behavior bất thường.
 
 **Cách dùng:**
 ```
-/debug "TypeError: Cannot read property 'id' of undefined ở line 42"
-/debug "API trả 500 khi POST /orders nhưng chỉ xảy ra với user có role admin"
+/ai-debug "TypeError: Cannot read property 'id' of undefined ở line 42"
+/ai-debug "API trả 500 khi POST /orders nhưng chỉ xảy ra với user có role admin"
 ```
 
 **3 phases:**
@@ -259,14 +259,14 @@ Sau đó chạy `/plan-edit` để generate plan dựa trên findings này.
 
 ---
 
-### `/think` — Tư duy phản biện
+### `/ai-think` — Tư duy phản biện
 
 **Khi dùng:** Task có nhiều hướng giải quyết, rủi ro cao, hoặc cần quyết định kiến trúc.
 
 **Cách dùng:**
 ```
-/think "Nên dùng WebSocket hay polling cho real-time notifications?"
-/think "Migrate từ MySQL sang PostgreSQL có nên làm không?"
+/ai-think "Nên dùng WebSocket hay polling cho real-time notifications?"
+/ai-think "Migrate từ MySQL sang PostgreSQL có nên làm không?"
 ```
 
 **3 lens:**
@@ -320,7 +320,7 @@ Mỗi khi mở session mới trong project có task đang `In Progress`:
 ---
 [ai-code-kit] Task đang In Progress:
   • feat-user-login — ST-3: Viết auth middleware | Next: test với Postman
-Tiếp tục với /plan-do để xem context đầy đủ.
+Tiếp tục với /ai-plan-do để xem context đầy đủ.
 ---
 ```
 
@@ -338,7 +338,7 @@ Mỗi task tạo ra 2 files trong `ai-code-kit/tasks/{branch-slug}/`:
 ---
 task_id: feat-user-login
 created: 2026-05-20
-status: Approved        # Draft → Approved sau khi /plan-edit approve
+status: Approved        # Draft → Approved sau khi /ai-plan-edit approve
 depth: standard
 ---
 
@@ -370,7 +370,7 @@ depth: standard
 - [ ] Token expire đúng 7 ngày
 
 ## Research Findings
-← /research ghi vào đây
+← /ai-research ghi vào đây
 ```
 
 ### `tracking.md` — Mutable, cập nhật liên tục
@@ -418,14 +418,14 @@ your-project/
 
 Claude Code ưu tiên **project-level > global**.
 
-### Ví dụ: Override `/review` cho project PHP/Laravel
+### Ví dụ: Override `/ai-review` cho project PHP/Laravel
 
-Tạo `.claude/skills/review/SKILL.md` trong project với thêm rules:
+Tạo `.claude/skills/ai-review/SKILL.md` trong project với thêm rules:
 
 ```markdown
 ---
-name: review
-description: Review code Laravel. Extends global review với PHP-specific checks.
+name: ai-review
+description: Review code Laravel. Extends global ai-review với PHP-specific checks.
 ---
 
 # Code Review (Laravel)
@@ -506,15 +506,15 @@ cp ~/.claude/settings.json.bak.YYYYMMDD ~/.claude/settings.json
 ```
 Chạy lại `install.sh`.
 
-### `/plan-do` báo "Plan chưa được approve"
+### `/ai-plan-do` báo "Plan chưa được approve"
 Mở `spec.md`, kiểm tra frontmatter:
 ```yaml
 status: Approved    ← phải là Approved, không phải Draft
 ```
-Nếu vẫn là `Draft` → chạy `/plan-edit` và gõ `"ok"` để approve.
+Nếu vẫn là `Draft` → chạy `/ai-plan-edit` và gõ `"ok"` để approve.
 
-### `/review` không có output
-- **Có uncommitted changes**: `/review` tự dùng working tree mode — không cần commit
+### `/ai-review` không có output
+- **Có uncommitted changes**: `/ai-review` tự dùng working tree mode — không cần commit
 - **Không có uncommitted changes**: cần ít nhất 1 commit trên branch so với base branch:
 ```bash
 git log --oneline main..HEAD    # hoặc develop..HEAD tuỳ base branch của project
@@ -551,4 +551,4 @@ Nếu bạn sửa skill global và muốn giữ khi update: đặt version riên
 
 ---
 
-*ai-code-kit v1.2.1*
+*ai-code-kit v1.3.0*

@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.3.0] — 2026-05-27
+
+### Changed
+- Tất cả skills đổi tên sang prefix `ai-`: `ai-plan`, `ai-plan-edit`, `ai-plan-do`, `ai-review`, `ai-debug`, `ai-think`, `ai-research`
+- `install.sh`: tự xóa skill cũ (tên cũ không có prefix) khi cài lại
+- Cross-references giữa các skills cập nhật theo tên mới
+
 ## [1.2.1] — 2026-05-22
 
 ### Added

@@ -1,5 +1,5 @@
 ---
-name: debug
+name: ai-debug
 description: Debug có hệ thống theo quy trình Observe → Hypothesize → Fix. Dùng khi gặp lỗi, test fail, hoặc behavior bất thường.
 argument-hint: "[mô tả vấn đề]"
 ---

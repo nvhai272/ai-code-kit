@@ -1,5 +1,5 @@
 ---
-name: plan
+name: ai-plan
 description: Khởi tạo task mới cho branch hiện tại. Tạo spec.md + tracking.md trong ai-code-kit/tasks/. Dùng khi bắt đầu feature hoặc task mới.
 ---
 
@@ -10,7 +10,7 @@ Chạy `git branch --show-current`. Dùng tên branch làm task slug: thay `/` �
 Hỏi: **"Dùng `{branch-slug}` làm tên task không?"**
 
 ## Bước 2 — Kiểm tra đã tồn tại
-- Có `ai-code-kit/tasks/{branch-slug}/` → Báo: *"Task đã tồn tại. Dùng `/plan-edit` để chỉnh hoặc `/plan-do` để tiếp tục."* → Dừng
+- Có `ai-code-kit/tasks/{branch-slug}/` → Báo: *"Task đã tồn tại. Dùng `/ai-plan-edit` để chỉnh hoặc `/ai-plan-do` để tiếp tục."* → Dừng
 - Chưa có → tạo thư mục `ai-code-kit/tasks/{branch-slug}/`
 
 ## Bước 3 — Tạo spec.md
@@ -29,7 +29,7 @@ depth: standard
 # Spec: {branch-slug}
 
 ## Intent
-<!-- Mô tả task ở đây, sau đó chạy /plan-edit -->
+<!-- Mô tả task ở đây, sau đó chạy /ai-plan-edit -->
 
 ## Scope
 ### In Scope
@@ -72,7 +72,7 @@ status: Not Started
   ai-code-kit/tasks/{branch-slug}/tracking.md
 
 → Mở spec.md, nhập mô tả vào ## Intent
-→ Chạy /plan-edit để generate subtasks
+→ Chạy /ai-plan-edit để generate subtasks
 ```
 
 **Quy tắc:** Không sửa file nào khác ngoài 2 files vừa tạo.

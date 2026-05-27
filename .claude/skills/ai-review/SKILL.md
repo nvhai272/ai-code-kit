@@ -1,5 +1,5 @@
 ---
-name: review
+name: ai-review
 description: Review code thay đổi trên branch hiện tại. Đánh giá chất lượng, rủi ro, đề xuất cải tiến. Dùng trước khi merge hoặc sau khi hoàn thành subtask.
 ---
 
@@ -90,7 +90,7 @@ Dùng Grep để tìm usages, kiểm tra breaking changes.
 ```
 
 ## Sau review
-- Critical → "Cần fix trước khi merge. Sau khi fix chạy lại `/review`."
+- Critical → "Cần fix trước khi merge. Sau khi fix chạy lại `/ai-review`."
 - Chỉ Warning → "Khuyến khích fix, nhưng có thể proceed và commit."
 - Pass → "Approved — có thể commit."
 

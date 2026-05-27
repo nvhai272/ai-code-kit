@@ -30,7 +30,7 @@ ai-code-kit/
 ├── README.md   CHANGELOG.md
 ```
 
-**Skills (7):** `plan` → `plan-edit` → `plan-do` → `review`, kèm `research` / `debug` / `think`. Task data sống tại `ai-code-kit/tasks/{branch-slug}/{spec.md,tracking.md}` trong project tiêu thụ, không phải repo này.
+**Skills (7):** `ai-plan` → `ai-plan-edit` → `ai-plan-do` → `ai-review`, kèm `ai-research` / `ai-debug` / `ai-think`. Task data sống tại `ai-code-kit/tasks/{branch-slug}/{spec.md,tracking.md}` trong project tiêu thụ, không phải repo này.
 
 **Hooks (3):**
 - `privacy-block` (PreToolUse:Read) — chặn đọc `.env`, `*.pem`, `credentials/*`
