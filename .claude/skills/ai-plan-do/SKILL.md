@@ -32,7 +32,7 @@ Chỉ sửa đúng scope subtask — không động code ngoài.
 Files đã thay đổi: [danh sách]
 Acceptance: [x] đã đạt / [ ] chưa check
 
-→ /ai-review để review code, hoặc "ok" để tiếp tục.
+→ "ok" để tiếp tục subtask kế.
 ```
 **KHÔNG tự làm subtask tiếp theo khi chưa có xác nhận.**
 

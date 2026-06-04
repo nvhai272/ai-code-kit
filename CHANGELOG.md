@@ -1,5 +1,16 @@
 # Changelog
 
+## [1.4.0] — 2026-06-04
+
+### Removed
+- Skill `ai-review` — dùng `/code-review` built-in hoặc review thủ công
+- Skill `ai-think` — gộp tư duy phản biện vào flow thường ngày
+
+### Changed
+- `ai-plan-do`: bỏ gợi ý `/ai-review` sau khi xong subtask
+- `install.sh` / `uninstall.sh`: cập nhật danh sách skills còn lại
+- README, CLAUDE.md: bỏ tham chiếu 2 skill đã xóa (còn 5 skills)
+
 ## [1.3.0] — 2026-05-27
 
 ### Changed

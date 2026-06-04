@@ -22,7 +22,7 @@ Không có build, lint, test — đây là shell + markdown.
 ```
 ai-code-kit/
 ├── .claude/
-│   ├── skills/<name>/SKILL.md        # 7 skills (frontmatter name+description+md)
+│   ├── skills/<name>/SKILL.md        # 5 skills (frontmatter name+description+md)
 │   ├── hooks/*.sh                    # 3 hooks (privacy-block, safety-guard, session-init)
 │   └── settings-fragment.json        # Hook config — install.sh jq-deep-merge vào ~/.claude/settings.json
 ├── install.sh   uninstall.sh
@@ -30,7 +30,7 @@ ai-code-kit/
 ├── README.md   CHANGELOG.md
 ```
 
-**Skills (7):** `ai-plan` → `ai-plan-edit` → `ai-plan-do` → `ai-review`, kèm `ai-research` / `ai-debug` / `ai-think`. Task data sống tại `ai-code-kit/tasks/{branch-slug}/{spec.md,tracking.md}` trong project tiêu thụ, không phải repo này.
+**Skills (5):** `ai-plan` → `ai-plan-edit` → `ai-plan-do`, kèm `ai-research` / `ai-debug`. Task data sống tại `ai-code-kit/tasks/{branch-slug}/{spec.md,tracking.md}` trong project tiêu thụ, không phải repo này.
 
 **Hooks (3):**
 - `privacy-block` (PreToolUse:Read) — chặn đọc `.env`, `*.pem`, `credentials/*`

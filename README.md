@@ -37,7 +37,7 @@ bash install.sh
 
 `install.sh` sẽ:
 - Backup skills cũ → `~/.claude/skills.bak.YYYYMMDDHHMMSS/`
-- Copy 7 skills → `~/.claude/skills/`
+- Copy 5 skills → `~/.claude/skills/`
 - Copy 3 hooks → `~/.claude/hooks/`
 - Merge hook config → `~/.claude/settings.json`
 
@@ -59,13 +59,12 @@ Gỡ cài đặt: `bash uninstall.sh` (không xóa task data trong `ai-code-kit/
   /ai-plan-edit                          [approve]
       ↓                                   ↓
   [approve]                           /ai-plan-do ←──┐
-      ↓                                   ↓       │
-  /ai-plan-do ←──┐                        /ai-review    │ (subtask tiếp)
-      ↓       │ (subtask tiếp)                    │
-   /ai-review    │                                   └──
+      ↓                                   ↓       │ (subtask tiếp)
+  /ai-plan-do ←──┐                                  └──
+      ↓       │ (subtask tiếp)
               └──
 
-Bất kỳ lúc nào:  /ai-debug · /ai-think
+Bất kỳ lúc nào:  /ai-debug
 ```
 
 ### Ví dụ thực tế: Feature "thêm tính năng đăng nhập"
@@ -96,15 +95,8 @@ git checkout -b feat/user-login
 # → Làm ST-1, dừng lại, chờ xác nhận
 # → Làm ST-2, dừng lại, chờ xác nhận...
 
-# Bước 7: Review code
-/ai-review
-# → Báo cáo CRITICAL / WARNING / SUGGESTION
-
 # Khi cần debug:
 /ai-debug "JWT token bị expire sớm hơn 7 ngày"
-
-# Khi cần nghĩ sâu hơn:
-/ai-think "Nên dùng refresh token hay sliding session?"
 ```
 
 ### Quy tắc quan trọng
@@ -195,30 +187,6 @@ Hoặc gõ feedback để AI điều chỉnh trước khi tiếp tục.
 
 ---
 
-### `/ai-review` — Code review
-
-**Khi dùng:** Sau khi implement xong (một subtask hoặc cả task), trước khi commit/merge.
-
-**Cách dùng:**
-```
-/ai-review
-```
-Tự detect branch và base branch — review uncommitted changes hoặc toàn bộ commits trên branch.
-
-**Output 3 mức:**
-- 🔴 **CRITICAL** — phải sửa trước khi merge (logic sai, security, data loss)
-- 🟡 **WARNING** — nên sửa (performance, error handling thiếu)
-- 🔵 **SUGGESTION** — cân nhắc (refactor, naming, style)
-
-**Sau review:**
-- Có Critical → sửa xong chạy lại `/ai-review`
-- Chỉ Warning → có thể commit, ghi nhận warning
-- Pass → approved, commit
-
-**Lưu ý:** Review chỉ đọc và báo cáo — không tự sửa code.
-
----
-
 ### `/ai-research` — Khảo sát codebase
 
 **Khi dùng:** Trước `/ai-plan-edit` khi task phức tạp, chạm nhiều files, hoặc bạn chưa quen codebase.
@@ -256,25 +224,6 @@ Sau đó chạy `/ai-plan-edit` để generate plan dựa trên findings này.
 3. **Fix** — impact analysis callers, verify root cause, regression check callers và test bao phủ (hoặc thông báo danh sách cần test thủ công)
 
 **Nguyên tắc:** Không sửa nhiều thứ cùng lúc — 1 hypothesis → 1 fix → 1 verify.
-
----
-
-### `/ai-think` — Tư duy phản biện
-
-**Khi dùng:** Task có nhiều hướng giải quyết, rủi ro cao, hoặc cần quyết định kiến trúc.
-
-**Cách dùng:**
-```
-/ai-think "Nên dùng WebSocket hay polling cho real-time notifications?"
-/ai-think "Migrate từ MySQL sang PostgreSQL có nên làm không?"
-```
-
-**3 lens:**
-- **Critical** — giả định đang dùng là gì? Có thể sai ở đâu? Top 3 risks?
-- **Systems** — side effects, data flow, feedback loops
-- **Perspectives** — góc nhìn User / Dev / Ops / Security
-
-**Output:** Bảng phân tích + đề xuất có lý do rõ ràng + trade-offs.
 
 ---
 
@@ -412,37 +361,34 @@ Skills ở `~/.claude/skills/` là **global**. Khi cần hành vi khác cho mộ
 your-project/
 └── .claude/
     └── skills/
-        └── review/
+        └── ai-plan-do/
             └── SKILL.md   ← Claude dùng cái này thay vì global
 ```
 
 Claude Code ưu tiên **project-level > global**.
 
-### Ví dụ: Override `/ai-review` cho project PHP/Laravel
+### Ví dụ: Override `/ai-plan-do` cho project PHP/Laravel
 
-Tạo `.claude/skills/ai-review/SKILL.md` trong project với thêm rules:
+Tạo `.claude/skills/ai-plan-do/SKILL.md` trong project với thêm rules:
 
 ```markdown
 ---
-name: ai-review
-description: Review code Laravel. Extends global ai-review với PHP-specific checks.
+name: ai-plan-do
+description: Thực hiện task Laravel. Extends global ai-plan-do với PHP-specific conventions.
 ---
 
-# Code Review (Laravel)
+# Thực Hiện Implementation (Laravel)
 
-<!-- Giữ toàn bộ nội dung global review, thêm section: -->
+<!-- Giữ toàn bộ nội dung global ai-plan-do, thêm section: -->
 
 ## PHP/Laravel Specific
 
-**🔴 CRITICAL thêm:**
-- N+1 query không dùng `with()` eager loading
-- Raw query không dùng prepared statements
-- Mass assignment không có `$fillable`
-
-**🟡 WARNING thêm:**
-- Logic trong Controller thay vì Service layer
-- Không dùng Form Request để validate
-- Response không wrap trong Resource class
+**Conventions bắt buộc khi implement:**
+- Eager load (`with()`) để tránh N+1 query
+- Dùng prepared statements / Eloquent, không raw query
+- Khai báo `$fillable` cho mass assignment
+- Logic ở Service layer, không nhồi vào Controller
+- Validate qua Form Request, response wrap trong Resource class
 ```
 
 ### Ví dụ: Tắt hook cho project cụ thể
@@ -513,13 +459,6 @@ status: Approved    ← phải là Approved, không phải Draft
 ```
 Nếu vẫn là `Draft` → chạy `/ai-plan-edit` và gõ `"ok"` để approve.
 
-### `/ai-review` không có output
-- **Có uncommitted changes**: `/ai-review` tự dùng working tree mode — không cần commit
-- **Không có uncommitted changes**: cần ít nhất 1 commit trên branch so với base branch:
-```bash
-git log --oneline main..HEAD    # hoặc develop..HEAD tuỳ base branch của project
-```
-
 ---
 
 ## Push lên GitHub & Update
@@ -551,4 +490,4 @@ Nếu bạn sửa skill global và muốn giữ khi update: đặt version riên
 
 ---
 
-*ai-code-kit v1.3.0*
+*ai-code-kit v1.4.0*
