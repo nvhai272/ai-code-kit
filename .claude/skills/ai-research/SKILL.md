@@ -79,3 +79,10 @@ Thêm vào section `## Research Findings`:
 ## Bước 5 — Tóm tắt
 Báo cáo ngắn: scope thật sự là gì, rủi ro chính, đề xuất tiếp theo.
 → *"Chạy `/ai-plan-edit` để lập kế hoạch dựa trên research này."*
+
+## Gotchas
+
+- ❌ Grep quá hẹp (1 thư mục) thay vì toàn dự án → bỏ sót callers/dependencies ở module khác
+- ❌ Ghi findings không phân biệt "directly changed" vs "likely affected" → plan sau thiếu chính xác
+- ❌ Sửa code trong lúc research → skill này chỉ đọc + ghi `## Research Findings`
+- ❌ Bỏ qua `git log`/`git blame` → mất context vì sao code hiện tại như vậy

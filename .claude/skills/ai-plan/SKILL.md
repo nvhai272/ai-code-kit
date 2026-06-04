@@ -76,3 +76,10 @@ status: Not Started
 ```
 
 **Quy tắc:** Không sửa file nào khác ngoài 2 files vừa tạo.
+
+## Gotchas
+
+- ❌ Tạo task khi chưa checkout đúng branch → task slug lệch với branch thực tế
+- ❌ Ghi đè `spec.md`/`tracking.md` đã tồn tại → mất Intent + lịch sử (phải check tồn tại ở Bước 2)
+- ❌ Tự điền nội dung vào `## Intent` thay vì để trống cho user → vi phạm vùng cấm
+- ❌ Tạo thêm file/thư mục ngoài 2 file spec.md + tracking.md

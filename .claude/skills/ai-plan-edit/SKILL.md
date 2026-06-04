@@ -53,3 +53,11 @@ Risks: {top 2}
 → Gõ "ok" để approve, hoặc feedback để điều chỉnh.
 ```
 **CHỜ xác nhận — KHÔNG tự làm task.**
+
+## Gotchas
+
+- ❌ Sửa `## Intent` dù chỉ thêm dấu → vùng cấm, chỉ đọc
+- ❌ Đổi `status` → `Approved` trước khi user gõ "ok"
+- ❌ Xóa/đổi nội dung subtask đã `✅ Done` khi re-generate plan
+- ❌ Generate subtask thiếu `Files` + `Acceptance` cụ thể → plan mơ hồ, khó verify
+- ❌ Bắt tay sửa code → skill này chỉ ghi `spec.md` + `tracking.md`
