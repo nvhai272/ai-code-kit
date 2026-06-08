@@ -38,6 +38,17 @@ if [[ "$BASENAME" == *.pem ]] || [[ "$BASENAME" == *.key ]] || \
   BLOCKED=true; REASON="Private key / certificate file"
 fi
 
+# SSH private keys (không có extension)
+if echo "$BASENAME" | grep -qE '^id_(rsa|ed25519|ecdsa|dsa)$'; then
+  BLOCKED=true; REASON="SSH private key"
+fi
+
+# Dotfiles chứa credentials (.npmrc, .netrc, .pgpass, .pypirc)
+case "$BASENAME" in
+  .npmrc|.netrc|.pgpass|.pypirc)
+    BLOCKED=true; REASON="Dotfile chứa credentials/auth token" ;;
+esac
+
 # Credentials & secrets files
 if echo "$BASENAME" | grep -qiE '^(credentials|secrets?|secret[-_]key|api[-_]key|auth[-_]token|access[-_]token)(\.[a-z]+)?$'; then
   BLOCKED=true; REASON="Credentials / secrets file"

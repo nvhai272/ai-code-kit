@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.4.1] — 2026-06-08
+
+### Fixed
+- `session-init.sh`: reference chết `/plan-do hoặc /handoff` → `/ai-plan-do`
+- `session-init.sh`: regex parse subtask mất tên (chỉ lấy `ST-N`, mất `: tên subtask`) → dùng awk parse cột table
+- `safety-guard.sh`: bypass force push bằng `-f` short flag và `+refspec` syntax → match đầy đủ
+- `safety-guard.sh`: parse JSON command bằng regex bị cắt khi có escaped quote → đổi sang `jq`
+- `privacy-block.sh`: thiếu pattern SSH keys (`id_rsa`, `id_ed25519`...), `.npmrc`, `.netrc`, `.pgpass`, `.pypirc`
+- `install.sh`: không xóa orphan `ai-review`/`ai-think` khi upgrade từ v1.3.0 → thêm vào `LEGACY_SKILLS`
+- `install.sh`: jq merge dupe hooks khi chạy lại → pre-clean ai-code-kit hooks trước khi merge
+- `uninstall.sh`: không dọn session markers `/tmp/ct-session-*`
+
 ## [1.4.0] — 2026-06-04
 
 ### Removed

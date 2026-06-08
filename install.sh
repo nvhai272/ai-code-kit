@@ -30,8 +30,10 @@ if [ -d "$CLAUDE_DIR/skills" ]; then
   warn "Backup skills cũ → $BACKUP"
 fi
 
-# ── 2b. Xóa skills cũ (tên cũ trước khi đổi prefix) ──────────────────────────
-LEGACY_SKILLS=(plan plan-edit plan-do review debug think research)
+# ── 2b. Xóa skills cũ (tên cũ trước prefix + skill đã bỏ ở version mới) ──────
+# - plan/plan-edit/.../research: tên cũ trước khi đổi prefix ai- (v1.3.0)
+# - ai-review/ai-think: đã bỏ ở v1.4.0
+LEGACY_SKILLS=(plan plan-edit plan-do review debug think research ai-review ai-think)
 for legacy in "${LEGACY_SKILLS[@]}"; do
   legacy_dir="$CLAUDE_DIR/skills/$legacy"
   if [ -d "$legacy_dir" ]; then
@@ -64,7 +66,26 @@ ok "Hooks đã cài: $(ls "$CLAUDE_DIR/hooks/"*.sh | xargs -I{} basename {} | tr
 # Backup settings trước khi merge
 cp "$SETTINGS" "$SETTINGS.bak.$(date +%Y%m%d%H%M%S)"
 
-# Deep merge: giữ nguyên tất cả keys cũ, thêm/override hooks
+# Pre-clean: xóa ai-code-kit hooks cũ trong settings (tránh dupe khi cài lại)
+jq '
+  if .hooks then
+    .hooks |= (
+      to_entries |
+      map(
+        .value |= map(
+          .hooks |= map(
+            select(.command | test("claude/hooks/(privacy-block|safety-guard|session-init)") | not)
+          )
+        ) |
+        select((.value | length) > 0)
+      ) |
+      from_entries
+    )
+  else . end
+' "$SETTINGS" > /tmp/ct_settings_clean.json
+mv /tmp/ct_settings_clean.json "$SETTINGS"
+
+# Deep merge: giữ nguyên tất cả keys cũ, thêm/concat hooks fragment
 jq -s '
   .[0] as $orig |
   .[1] as $frag |

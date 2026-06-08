@@ -6,9 +6,8 @@
 
 INPUT=$(cat)
 
-# Extract command — pure bash, không cần jq
-COMMAND=$(echo "$INPUT" | grep -o '"command"[[:space:]]*:[[:space:]]*"[^"]*"' \
-  | sed 's/"command"[[:space:]]*:[[:space:]]*"//;s/"$//' | head -1)
+# Extract command — dùng jq để xử lý escaped quote đúng
+COMMAND=$(echo "$INPUT" | jq -r '.tool_input.command // ""' 2>/dev/null)
 
 [ -z "$COMMAND" ] && exit 0
 
@@ -22,15 +21,24 @@ if echo "$COMMAND" | grep -qE 'rm\s+-[rf]{1,2}\s+(\/\s*$|\*|\.(\s|$))'; then
   exit 2
 fi
 
-# ── Pattern 2: git push --force lên protected branches ───────────────────────
-if echo "$COMMAND" | grep -qE 'git\s+push\s+.*--force'; then
+# ── Pattern 2: git push force lên protected branches ─────────────────────────
+# Match: --force, --force-with-lease, -f (short flag), hoặc +refspec
+IS_FORCE=false
+if echo "$COMMAND" | grep -qE 'git\s+push\b.*(--force(-with-lease)?|\s-[a-zA-Z]*f(\s|$))'; then
+  IS_FORCE=true
+elif echo "$COMMAND" | grep -qE 'git\s+push\s+\S+\s+\+\S+'; then
+  IS_FORCE=true
+fi
+
+if [ "$IS_FORCE" = true ]; then
   BRANCH=$(echo "$COMMAND" | grep -oE '(main|master|develop|dev|release)' | head -1)
   if [ -n "$BRANCH" ]; then
-    echo "[safety-guard] BLOCKED: git push --force lên $BRANCH" >&2
+    echo "[safety-guard] BLOCKED: git push force lên $BRANCH" >&2
+    echo "  Command: $COMMAND" >&2
     echo "  Force push lên protected branch không được phép." >&2
     exit 2
   fi
-  echo "[safety-guard] WARNING: git push --force lên non-protected branch" >&2
+  echo "[safety-guard] WARNING: git push force lên non-protected branch" >&2
   echo "  Proceed nếu intentional." >&2
   exit 0
 fi

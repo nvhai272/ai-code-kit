@@ -38,9 +38,12 @@ while IFS= read -r tracking_file; do
   if grep -q '^status: In Progress' "$tracking_file" 2>/dev/null; then
     task_name=$(basename "$(dirname "$tracking_file")")
 
-    # Lấy subtask đang In Progress
-    current_st=$(grep '🟡 In Progress' "$tracking_file" 2>/dev/null \
-      | grep -oE 'ST-[0-9]+[^|]*' | head -1 | xargs 2>/dev/null || echo "")
+    # Lấy subtask đang In Progress — parse cột 2 (ST-N) + cột 3 (tên) của table row
+    current_st=$(grep '🟡 In Progress' "$tracking_file" 2>/dev/null | head -1 \
+      | awk -F'|' '{
+          gsub(/^ +| +$/, "", $2); gsub(/^ +| +$/, "", $3);
+          if ($2 != "") print $2 ": " $3
+        }' 2>/dev/null || echo "")
 
     # Lấy bước tiếp theo từ Handoff Notes
     next_step=$(awk '/## Handoff Notes/{found=1} found && /Bước tiếp theo:/{print; exit}' \
@@ -64,8 +67,7 @@ for item in "${ACTIVE[@]}"; do
   echo "  • $item"
 done
 if [ ${#ACTIVE[@]} -eq 1 ]; then
-  task_slug=$(echo "${ACTIVE[0]}" | cut -d' ' -f1)
-  echo "Tiếp tục với /plan-do hoặc /handoff để xem context đầy đủ."
+  echo "Tiếp tục với /ai-plan-do để tiếp tục subtask."
 else
   echo "Nhiều tasks active — hỏi user muốn tiếp tục task nào."
 fi

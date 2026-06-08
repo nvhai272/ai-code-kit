@@ -64,7 +64,10 @@ if command -v jq >/dev/null 2>&1 && [ -f "$SETTINGS" ]; then
   ok "Hook config đã xóa khỏi settings.json"
 fi
 
-# ── 5. Done ───────────────────────────────────────────────────────────────────
+# ── 5. Xóa session markers (tránh sót state khi cài lại) ─────────────────────
+rm -f /tmp/ct-session-* 2>/dev/null && ok "Cleaned session markers"
+
+# ── 6. Done ───────────────────────────────────────────────────────────────────
 echo ""
 echo "──────────────────────────────"
 echo -e "${GREEN}Gỡ cài đặt hoàn tất.${NC}"
