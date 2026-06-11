@@ -50,7 +50,7 @@ ai-code-kit/
 
 - SKILL.md ngắn (< 100 dòng) — best practice Anthropic là < 500
 - Frontmatter có `name` + `description`; thêm `argument-hint` / `allowed-tools` khi phù hợp
-- **Iron Laws + Red Flags table** ở cuối skill rigid (`plan-do`) — pattern chống Claude drift
+- **Iron Laws + Red Flags table** ở cuối skill rigid (`ai-plan-do`) — pattern chống Claude drift
 - **Gotchas section** ở cuối mỗi skill — lỗi phổ biến + cách tránh (best practice Anthropic)
 - Toàn bộ user-facing text bằng **tiếng Việt** — giữ convention khi sửa hoặc thêm skill mới
 

@@ -58,7 +58,7 @@ Bắt đầu với hypothesis khả năng cao nhất.
   ```
 - Với mỗi caller: xác định fix có thay đổi behavior của caller đó không
 - Nếu có caller bị ảnh hưởng ngoài ý muốn → điều chỉnh approach (thêm param optional, tạo method mới, v.v.)
-- Thông báo files sẽ thay đổi và phạm vi ảnh hưởng → chờ xác nhận
+- Thông báo ngắn files sẽ thay đổi + phạm vi ảnh hưởng, rồi fix. **Chỉ DỪNG chờ confirm khi gặp hard-stop**: cần install/gỡ dependency, migration/seed/drop DB, destructive op (`rm -rf`, force push), hoặc fix chạm code ngoài scope của bug đang debug.
 
 **Sau khi sửa — regression check (bắt buộc):**
 - Verify fix giải quyết đúng root cause

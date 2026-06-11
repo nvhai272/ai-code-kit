@@ -1,9 +1,9 @@
 ---
 name: ai-plan-do
-description: Thực hiện task từ spec.md theo thứ tự subtask. Dùng sau khi plan đã được approve.
+description: Thực hiện task từ spec.md theo thứ tự subtask. Auto-execute liên tục, chỉ dừng ở hard-stop. Sinh report.html cumulative để review trực quan.
 ---
 
-# Thực Hiện Implementation
+# Thực Hiện Implementation (Auto-Execute)
 
 ## Bước 1 — Đọc task
 `git branch --show-current` → tìm `ai-code-kit/tasks/{branch-slug}/`:
@@ -12,68 +12,81 @@ description: Thực hiện task từ spec.md theo thứ tự subtask. Dùng sau 
 - `status` chưa `Approved` → *"Plan chưa được approve."* → Dừng
 - Tất cả ✅ Done → *"Tất cả subtasks đã hoàn thành."* → Dừng
 
-## Bước 2 — Chọn subtask
-Tìm ST đầu tiên còn `⬜ Pending` theo thứ tự trong tracking.md.
-Kiểm tra Dependencies — ST cha phải xong trước.
-Thông báo: **"Bắt đầu {ST-N}: {tên}"**
+Đọc cả `## Research Findings` trong spec.md (nếu có).
 
-## Bước 3 — Thực hiện
-Trước khi code:
-- Đọc toàn bộ files liên quan
-- Grep tìm usages bị ảnh hưởng
-- Liệt kê files sẽ thay đổi → chờ xác nhận
+## Bước 2 — Khởi tạo report.html (1 lần duy nhất)
+Path: `ai-code-kit/tasks/{branch-slug}/report.html`. Nếu chưa tồn tại → tạo skeleton:
+- HTML5, `lang="vi"`, UTF-8
+- Inline CSS gọn (typography rõ, dark-friendly, responsive)
+- highlight.js CDN + theme `github-dark` (cho `language-diff`)
+- `<main id="report">` chứa `<header>` (task name, branch, ngày bắt đầu) và placeholder `<section id="subtasks">`
 
-Nếu project có test command (package.json scripts, Makefile...) → chạy sau khi implement.
-Chỉ sửa đúng scope subtask — không động code ngoài.
+## Bước 3 — Loop subtask (AUTO, không hỏi giữa các ST)
+Lặp cho đến khi hết ST `⬜ Pending` hoặc gặp hard-stop. Với mỗi ST:
 
-## Bước 4 — Báo cáo & chờ
-```
-## Hoàn Thành {ST-N}: {tên}
-Files đã thay đổi: [danh sách]
-Acceptance: [x] đã đạt / [ ] chưa check
+1. Check Dependencies — ST cha phải Done. Chưa xong → skip, log "blocked by ST-X".
+2. Báo 1 dòng: **"▶ ST-N: {tên}"**
+3. **Đọc files liên quan + grep usages** để hiểu impact (bắt buộc với symbol public).
+4. **Implement**:
+   - Minimal diff, đúng scope ST.
+   - **Comment WHY** ở luồng phức tạp (multi-step business logic, workaround cho bug cụ thể, invariant ẩn, edge case không obvious). KHÔNG comment WHAT.
+5. Chạy test command nếu project có config (`package.json scripts.test`, `Makefile`, `pytest.ini`…). Verify acceptance criteria.
+6. **Append section vào report.html** (Bước 4).
+7. **Update tracking.md**: row ST → `✅ Done | {date} | {ghi chú}`; `last_updated`; append Changelog `### {date} — ST-N: {tóm tắt}`.
+8. Báo 1 dòng: **"✓ ST-N done"** → tiếp ST kế (KHÔNG chờ user).
 
-→ "ok" để tiếp tục subtask kế.
-```
-**KHÔNG tự làm subtask tiếp theo khi chưa có xác nhận.**
+## Bước 4 — Append vào report.html mỗi khi ST done
+Insert `<section class="subtask" id="st-N">` ngay TRƯỚC `</main>`. Chứa:
+- `<h2>ST-N: {tên}</h2>` + thẻ ngày
+- **Summary**: 1-3 câu — đã làm gì + tại sao (WHY)
+- **Acceptance**: `<ul>` với ✓/✗ từng criterion
+- **Files changed**: `<details>` collapsible — list file (create/edit/delete) + diff (`<pre><code class="language-diff">`, escape `<>&`)
+- **Impact analysis**: symbol public bị ảnh hưởng + danh sách callers (từ grep ở Bước 3.3)
 
-## Bước 5 — Cập nhật sau khi user xác nhận
-Khi user gõ "ok" / "tiếp" / "được":
+Khi tất cả ST xong → insert `<section class="overview">` ở đầu `<main>` (sau `<header>`): tổng số ST, danh sách file thay đổi cộng dồn, key decisions.
 
-**tracking.md:**
-- Row subtask: `✅ Done | {date} | {ghi chú ngắn}`
-- Frontmatter: `last_updated`, `status` (In Progress / Done nếu hết ST)
-- Changelog: `### {date} — ST-N: {tóm tắt thay đổi}`
+## Bước 5 — Hard-Stops (DỪNG + chờ user)
+Chỉ dừng auto-execute khi gặp các tình huống sau. Báo rõ, chờ "ok"/feedback:
 
-Thông báo subtask tiếp theo (nếu còn).
+| Tình huống | Hành động |
+|---|---|
+| Cần `npm/pnpm/yarn/composer/pip install/uninstall/upgrade` | In command + lý do, chờ confirm |
+| Migration / seed / drop / truncate / alter DB | In SQL/command, chờ confirm |
+| `rm -rf`, `git reset --hard`, force push, xóa branch | In command, chờ confirm |
+| Phát hiện cần sửa code ngoài scope ST | Ghi Changelog `Phát hiện: {X}`, hỏi: "thêm ST mới hay skip?" |
+| Intent thiếu thông tin để quyết định | Hỏi cụ thể, KHÔNG tự assume |
+| Test fail / acceptance không pass sau implement | In log, hỏi: "debug tiếp / rollback / skip?" |
 
-## Khi phát hiện vấn đề ngoài scope
-1. DỪNG ngay
-2. Ghi vào Changelog: `Phát Hiện: {vấn đề}`
-3. Báo user, chờ quyết định — không tự mở rộng scope
+## Bước 6 — Kết thúc task
+Sau ST cuối: `status: Done` trong tracking.md frontmatter, append overview vào report.html, báo:
+*"✅ Hoàn thành {N} subtasks. Mở `ai-code-kit/tasks/{slug}/report.html` để review."*
 
-## ⚖️ IRON LAWS — KHÔNG BAO GIỜ VI PHẠM
+## ⚖️ IRON LAWS
+1. **HARD-STOP → DỪNG.** Không tự install/migrate/destructive op.
+2. **NGOÀI SCOPE → DỪNG, BÁO, CHỜ.** Không tự mở rộng.
+3. **KHÔNG SỬA `## Intent` trong spec.md** — kể cả thêm dấu chấm.
+4. **MỖI ST DONE → BẮT BUỘC APPEND report.html + UPDATE tracking.md.** Không skip.
+5. **COMMENT WHY ở luồng phức tạp.** Không comment WHAT.
 
-1. **XONG 1 ST → DỪNG. CHỜ USER GÕ "ok" / "tiếp" / "được".**
-2. **KHÔNG TÍCH `✅ Done` TRƯỚC KHI USER XÁC NHẬN.**
-3. **KHÔNG SỬA `## Intent` TRONG spec.md — kể cả thêm dấu chấm.**
-4. **PHÁT HIỆN NGOÀI SCOPE → DỪNG, BÁO, CHỜ — KHÔNG TỰ MỞ RỘNG.**
-
-## 🚩 Red Flags — Lý lẽ Claude hay dùng để phá luật
-
+## 🚩 Red Flags
 | Claude tự nhủ | Phản biện đúng |
 |---|---|
-| "User im lặng = ngầm đồng ý, làm ST tiếp" | Im lặng ≠ ok. Hỏi rõ. |
-| "Acceptance có vẻ pass, tick Done cho gọn" | Chờ user verify. |
-| "Intent thiếu 1 chi tiết, bổ sung 1 dòng" | Intent là vùng cấm. Báo user. |
-| "Tiện tay fix typo / dead code ngoài scope" | Note vào Changelog, KHÔNG fix. |
-| "ST này nhỏ, gộp ST tiếp cho gọn" | 1 ST = 1 stop. |
-| "Project không có test, skip phần test" | Báo "cần manual test [list]" — không skip âm thầm. |
-| "Grep callers tốn thời gian, skip vì thay đổi nhỏ" | Không skip. Impact analysis là bắt buộc. |
+| "Install nhanh dep này cho gọn" | Hard-stop. Hỏi user. |
+| "Migration nhỏ, chạy luôn" | Hard-stop. Hỏi user. |
+| "Test fail nhẹ, vẫn tick Done" | Acceptance fail → DỪNG, không tick. |
+| "Skip report.html cho ST đơn giản" | Mọi ST đều append. |
+| "Tiện tay fix typo ngoài scope" | Note Changelog, KHÔNG fix. |
+| "Code rõ rồi, comment thừa" | Đúng cho WHAT. WHY phức tạp → BẮT BUỘC. |
+| "Project không có test, skip im lặng" | Báo "cần manual test [list]". |
+| "Grep callers tốn thời gian" | Impact analysis là bắt buộc cho report. |
+| "User chắc đồng ý dep này, install luôn" | Im lặng ≠ ok. Hard-stop. |
 
 ## Gotchas
-
-- ❌ Chạy test command mà không kiểm tra project có config test không (`package.json scripts.test`, `Makefile`, `pytest.ini`...) → có thể chạy nhầm command sai
-- ❌ Khi user feedback giữa chừng "à thêm cái X", coi đó là ST mới → KHÔNG: hỏi user "thêm vào ST hiện tại hay tạo ST mới?"
-- ❌ Quên cập nhật `last_updated` trong frontmatter tracking.md sau khi tick Done
-- ❌ Báo cáo "Files đã thay đổi" thiếu file (chỉ liệt kê file edit, quên file create/delete)
-- ❌ Đọc spec.md nhưng bỏ qua `## Research Findings` → mất context quan trọng từ `/ai-research`
+- ❌ Tạo report.html từ đầu mỗi ST → mất lịch sử. Check tồn tại, chỉ tạo skeleton 1 lần.
+- ❌ Append section sau `</main>` → HTML invalid. Insert TRƯỚC `</main>`.
+- ❌ Embed diff thô không escape `<`, `>`, `&` → vỡ HTML hoặc XSS-like render.
+- ❌ Quên highlight.js CDN → diff không màu, khó đọc.
+- ❌ Bỏ qua hard-stop vì "chắc user đồng ý" → vi phạm Iron Law #1.
+- ❌ Comment ở mọi function (kể cả trivial) → noise. Chỉ WHY non-obvious.
+- ❌ Đọc spec.md nhưng bỏ qua `## Research Findings` → mất context từ `/ai-research`.
+- ❌ Báo cáo "Files đã thay đổi" thiếu file (chỉ liệt kê edit, quên create/delete).

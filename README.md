@@ -58,14 +58,16 @@ Gỡ cài đặt: `bash uninstall.sh` (không xóa task data trong `ai-code-kit/
       ↓                                   ↓
   /ai-plan-edit                          [approve]
       ↓                                   ↓
-  [approve]                           /ai-plan-do ←──┐
-      ↓                                   ↓       │ (subtask tiếp)
-  /ai-plan-do ←──┐                                  └──
-      ↓       │ (subtask tiếp)
-              └──
+  [approve]                           /ai-plan-do  ⟳ auto loop hết ST
+      ↓                                   ↓        chỉ dừng ở hard-stop
+  /ai-plan-do  ⟳ auto loop hết ST         ↓
+      ↓                                   →  report.html (review trực quan)
+      →  report.html (review trực quan)
 
 Bất kỳ lúc nào:  /ai-debug
 ```
+
+**Hard-stop của `/ai-plan-do`** (dừng + chờ confirm): install/gỡ dependency, migration/seed/drop DB, destructive ops (`rm -rf`, `git reset --hard`, force push), phát hiện ngoài scope, Intent thiếu thông tin, test/acceptance fail.
 
 ### Ví dụ thực tế: Feature "thêm tính năng đăng nhập"
 
@@ -90,10 +92,11 @@ git checkout -b feat/user-login
 # → Sinh ST-1 đến ST-N, risks, success criteria
 # → Hiển thị plan, CHỜ bạn gõ "ok"
 
-# Bước 6: Implement từng subtask
+# Bước 6: Implement — auto-execute toàn bộ subtask
 /ai-plan-do
-# → Làm ST-1, dừng lại, chờ xác nhận
-# → Làm ST-2, dừng lại, chờ xác nhận...
+# → Tự chạy ST-1 → ST-2 → ... liên tục, append report.html sau mỗi ST
+# → Chỉ DỪNG khi gặp hard-stop (install dep, migration, ngoài scope, test fail...)
+# → Khi xong: mở ai-code-kit/tasks/{slug}/report.html để review trực quan
 
 # Khi cần debug:
 /ai-debug "JWT token bị expire sớm hơn 7 ngày"
@@ -103,10 +106,11 @@ git checkout -b feat/user-login
 
 | Quy tắc | Lý do |
 |---------|-------|
-| Mỗi subtask chờ xác nhận trước khi sang cái tiếp | Tránh AI tự ý làm quá scope |
+| `/ai-plan-do` auto chạy liên tục, chỉ dừng ở hard-stop | Cân bằng giữa tự động và an toàn — confirm khi thực sự cần |
+| Mỗi ST done → bắt buộc append `report.html` + update `tracking.md` | Có audit trail trực quan để review |
 | `## Intent` trong spec.md không bao giờ bị sửa | Là nguồn gốc, không được drift |
 | Subtask đã Done không bị xóa | Lịch sử không thể xóa |
-| Mỗi subtask chờ xác nhận trước khi commit | Tránh commit nhầm |
+| Comment WHY ở luồng phức tạp, không comment WHAT | Code rõ rồi — chỉ note phần non-obvious |
 
 ---
 
@@ -153,26 +157,37 @@ Cũng dùng để **cập nhật plan** khi scope thay đổi giữa chừng.
 
 ---
 
-### `/ai-plan-do` — Thực hiện
+### `/ai-plan-do` — Thực hiện (Auto-Execute)
 
-**Khi dùng:** Sau khi plan đã approved, muốn AI implement từng subtask.
+**Khi dùng:** Sau khi plan đã approved, muốn AI implement toàn bộ subtask một mạch.
 
 **Cách dùng:**
 ```
 /ai-plan-do
 ```
 
-**Quá trình:**
-1. Tìm ST đầu tiên `⬜ Pending`
-2. Đọc files liên quan → báo danh sách files sẽ thay đổi → chờ xác nhận
-3. Implement
-4. Báo cáo kết quả → **dừng chờ xác nhận** trước khi sang ST tiếp
-5. Sau xác nhận: cập nhật `tracking.md` (tick Done, ghi changelog)
+**Quá trình (auto loop, không hỏi giữa các ST):**
+1. Khởi tạo `report.html` (1 lần) trong `ai-code-kit/tasks/{slug}/`
+2. Lặp qua ST `⬜ Pending` theo thứ tự. Với mỗi ST:
+   - Đọc files + grep usages (impact analysis)
+   - Implement minimal diff. **Comment WHY** ở luồng phức tạp.
+   - Chạy test nếu project có config; verify acceptance
+   - **Append section vào `report.html`**: Summary + Acceptance, Files changed kèm diff syntax-highlighted, Impact analysis (symbols + callers)
+   - Update `tracking.md` (tick Done, changelog) → tiếp ST kế
+3. Hết ST → append overview vào `report.html`, set `status: Done`
 
-**Xác nhận:** Gõ `"ok"` / `"tiếp"` / `"được"` để sang subtask tiếp.  
-Hoặc gõ feedback để AI điều chỉnh trước khi tiếp tục.
+**Hard-stop — dừng + chờ confirm:**
 
-**Nếu phát hiện vấn đề ngoài scope:** AI dừng, báo cáo, chờ quyết định — không tự mở rộng.
+| Tình huống | Hành động |
+|---|---|
+| Install/gỡ/upgrade dependency | In command + lý do, chờ "ok" |
+| Migration / seed / drop / truncate / alter DB | In SQL/command, chờ "ok" |
+| `rm -rf`, `git reset --hard`, force push, xóa branch | In command, chờ "ok" |
+| Phát hiện ngoài scope ST | Ghi Changelog, hỏi: thêm ST mới hay skip? |
+| Intent thiếu thông tin để quyết định | Hỏi cụ thể, không tự assume |
+| Test fail / acceptance không pass | In log, hỏi: debug / rollback / skip? |
+
+**Review:** Mở `ai-code-kit/tasks/{slug}/report.html` bằng browser — diff màu, collapsible, có impact analysis.
 
 ---
 
@@ -180,10 +195,11 @@ Hoặc gõ feedback để AI điều chỉnh trước khi tiếp tục.
 
 | | `/ai-plan-edit` | `/ai-plan-do` |
 |---|---|---|
-| Làm gì | Phân tích + viết plan | Implement code |
+| Làm gì | Phân tích + viết plan | Implement code (auto loop) |
 | Chạm vào code | Không | Có |
-| Output | spec.md được điền đầy đủ | Code changes + tracking.md updated |
+| Output | spec.md được điền đầy đủ | Code changes + tracking.md + report.html |
 | Khi nào | Trước khi code | Sau khi plan approved |
+| Dừng khi nào | Chờ approve plan | Chỉ ở hard-stop (xem trên) |
 
 ---
 
@@ -490,4 +506,4 @@ Nếu bạn sửa skill global và muốn giữ khi update: đặt version riên
 
 ---
 
-*ai-code-kit v1.4.1*
+*ai-code-kit v1.5.0*

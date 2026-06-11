@@ -1,5 +1,15 @@
 # Changelog
 
+## [1.5.0] — 2026-06-11
+
+### Changed
+- `ai-plan-do`: chuyển sang **auto-execute** — tự chạy liên tục qua các subtask, không còn dừng chờ "ok" sau mỗi ST. Chỉ dừng khi gặp **hard-stop**: install/gỡ dependency, migration/seed/drop DB, destructive ops (`rm -rf`, `git reset --hard`, force push), phát hiện ngoài scope, Intent thiếu thông tin, test/acceptance fail.
+- `ai-plan-do`: thêm yêu cầu **comment WHY** ở luồng phức tạp (business logic nhiều bước, workaround, invariant ẩn). Không comment WHAT.
+- `ai-plan-do`: Iron Laws + Red Flags cập nhật cho flow auto-execute (bỏ "stop-per-ST", thêm "hard-stop nguyên tắc").
+
+### Added
+- `ai-plan-do`: sinh `ai-code-kit/tasks/{branch-slug}/report.html` **cumulative** — mỗi ST done append 1 section gồm Summary + Acceptance, Files changed kèm syntax-highlighted diff (highlight.js CDN), Impact analysis (symbols + callers). Khi task xong có overview tổng kết. Mở bằng browser để review trực quan.
+
 ## [1.4.1] — 2026-06-08
 
 ### Fixed
