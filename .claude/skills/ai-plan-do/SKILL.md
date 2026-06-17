@@ -54,6 +54,7 @@ Chỉ dừng auto-execute khi gặp các tình huống sau. Báo rõ, chờ "ok"
 | Migration / seed / drop / truncate / alter DB | In SQL/command, chờ confirm |
 | `rm -rf`, `git reset --hard`, force push, xóa branch | In command, chờ confirm |
 | Phát hiện cần sửa code ngoài scope ST | Ghi Changelog `Phát hiện: {X}`, hỏi: "thêm ST mới hay skip?" |
+| Phát hiện bug ở ST khác đã ✅ Done | DỪNG. Không tự sửa ST đó (bất biến) — đề xuất chạy `/ai-plan-edit` để tạo ST mới tham chiếu |
 | Intent thiếu thông tin để quyết định | Hỏi cụ thể, KHÔNG tự assume |
 | Test fail / acceptance không pass sau implement | In log, hỏi: "debug tiếp / rollback / skip?" |
 
@@ -76,6 +77,7 @@ Sau ST cuối: `status: Done` trong tracking.md frontmatter, append overview và
 | "Test fail nhẹ, vẫn tick Done" | Acceptance fail → DỪNG, không tick. |
 | "Skip report.html cho ST đơn giản" | Mọi ST đều append. |
 | "Tiện tay fix typo ngoài scope" | Note Changelog, KHÔNG fix. |
+| "Bug nhỏ ở ST cũ, sửa luôn cho nhanh" | Hard-stop. ST Done là final — tạo ST mới qua `/ai-plan-edit`. |
 | "Code rõ rồi, comment thừa" | Đúng cho WHAT. WHY phức tạp → BẮT BUỘC. |
 | "Project không có test, skip im lặng" | Báo "cần manual test [list]". |
 | "Grep callers tốn thời gian" | Impact analysis là bắt buộc cho report. |

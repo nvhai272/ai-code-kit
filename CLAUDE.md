@@ -30,7 +30,7 @@ ai-code-kit/
 ├── README.md   CHANGELOG.md
 ```
 
-**Skills (5):** `ai-plan` → `ai-plan-edit` → `ai-plan-do`, kèm `ai-research` / `ai-debug`. Task data sống tại `ai-code-kit/tasks/{branch-slug}/{spec.md,tracking.md}` trong project tiêu thụ, không phải repo này.
+**Skills (5):** `ai-plan` → `ai-plan-edit` → `ai-plan-do`, kèm `ai-research` / `ai-debug`. Task data sống tại `ai-code-kit/tasks/{branch-slug}/{spec.md,tracking.md,report.html}` trong project tiêu thụ, không phải repo này.
 
 **Hooks (3):**
 - `privacy-block` (PreToolUse:Read) — chặn đọc `.env`, `*.pem`, `credentials/*`
@@ -59,4 +59,8 @@ ai-code-kit/
 - `spec.md` có frontmatter `status: Draft|Approved`; `tracking.md` có `status: Not Started|In Progress|Done`
 - `## Intent` trong spec.md là **vùng cấm sửa** — chỉ user viết, AI không bao giờ chỉnh kể cả thêm dấu
 - Subtask đã `✅ Done` không bao giờ bị xóa hay đổi nội dung
+- `report.html` chỉ tạo skeleton 1 lần; các ST sau chỉ **append** section — không tạo lại từ đầu (mất lịch sử)
+- Task `Done` + feedback/bug mới → **reopen** qua `/ai-plan-edit`: `tracking.md` về `In Progress`, `spec.md` về `Draft`, chờ approve lại
+- Bug ở 1 ST đã `✅ Done` → tạo ST mới tham chiếu (`Fix bug ở ST-X`), không sửa/xóa ST cũ
+- `/ai-debug` tự append Changelog vào `tracking.md` nếu branch hiện tại có active task (`status: In Progress`)
 - `session-init` detect task active bằng grep `^status: In Progress` trong tracking.md frontmatter

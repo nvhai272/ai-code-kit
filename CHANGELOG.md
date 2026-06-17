@@ -1,5 +1,15 @@
 # Changelog
 
+## [1.6.0] — 2026-06-17
+
+### Added
+- `ai-plan-edit`: hỗ trợ **reopen** task đã `Done` khi có feedback/bug mới — reset `tracking.md` về `In Progress` và `spec.md` về `Draft`, chờ approve lại. Bug ở 1 ST cụ thể đã `✅ Done` → tạo **ST mới tham chiếu** (`Fix bug ở ST-X`), không sửa/xóa ST cũ (giữ bất biến).
+- `ai-plan-do`: thêm hard-stop "phát hiện bug ở ST khác đã ✅ Done" — dừng, đề xuất chạy `/ai-plan-edit` thay vì tự sửa.
+- `ai-debug`: sau khi fix xong, nếu branch hiện tại có active task (`tracking.md` `status: In Progress`) → tự append Changelog `Bug fix: {root cause}`. Không có active task → bỏ qua, không tạo file mới.
+
+### Fixed
+- `install.sh`: `cp -r "$skill_dir" "$CLAUDE_DIR/skills/$skill_name"` không overwrite khi đích đã tồn tại — nest thành `<skill>/<skill>/SKILL.md`, khiến `SKILL.md` top-level (file Claude Code thực sự đọc) **không bao giờ được cập nhật** ở các lần install lại. Bug tồn tại từ trước, ảnh hưởng mọi skill. Thêm `rm -rf` trước `cp -r` để đảm bảo overwrite đúng.
+
 ## [1.5.0] — 2026-06-11
 
 ### Changed

@@ -47,6 +47,9 @@ mkdir -p "$CLAUDE_DIR/skills"
 INSTALLED_SKILLS=()
 for skill_dir in "$SKILLS_SRC"/*/; do
   skill_name="$(basename "$skill_dir")"
+  # rm trước khi cp: nếu đích đã tồn tại, "cp -r src/ dst" nest vào dst/src/
+  # thay vì overwrite — khiến bản cũ ở dst/SKILL.md không bao giờ được cập nhật.
+  rm -rf "$CLAUDE_DIR/skills/$skill_name"
   cp -r "$skill_dir" "$CLAUDE_DIR/skills/$skill_name"
   INSTALLED_SKILLS+=("$skill_name")
 done

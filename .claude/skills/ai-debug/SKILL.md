@@ -76,6 +76,11 @@ Verified: [cách đã kiểm tra]
 Prevention: [cách tránh lần sau — nếu có]
 ```
 
+**Sync với active task (nếu có) — sau khi fix xong:**
+- `git branch --show-current` → tìm `ai-code-kit/tasks/{branch-slug}/tracking.md`
+- Có và `status: In Progress` → append Changelog: `### {date} — Bug fix: {root cause tóm tắt}`
+- Không có hoặc status khác → bỏ qua, KHÔNG tạo file mới
+
 **Quy tắc:** Không sửa nhiều thứ cùng lúc — 1 hypothesis, 1 fix, 1 verify.
 
 ## Gotchas
@@ -87,3 +92,4 @@ Prevention: [cách tránh lần sau — nếu có]
 - ❌ Hypothesis dạng "có lẽ là race condition" nhưng không có evidence cụ thể → đoán mò, lãng phí thời gian
 - ❌ Tìm thấy 1 nguyên nhân → fix luôn mà không grep pattern tương tự ở file khác → để sót bug đồng dạng
 - ❌ Fix xong báo "done" mà không liệt kê callers cần manual test (khi project không có test)
+- ❌ Tạo mới `spec.md`/`tracking.md` khi không tìm thấy active task → ai-debug không khởi tạo task, chỉ skip im lặng

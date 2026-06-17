@@ -67,7 +67,9 @@ Gỡ cài đặt: `bash uninstall.sh` (không xóa task data trong `ai-code-kit/
 Bất kỳ lúc nào:  /ai-debug
 ```
 
-**Hard-stop của `/ai-plan-do`** (dừng + chờ confirm): install/gỡ dependency, migration/seed/drop DB, destructive ops (`rm -rf`, `git reset --hard`, force push), phát hiện ngoài scope, Intent thiếu thông tin, test/acceptance fail.
+**Hard-stop của `/ai-plan-do`** (dừng + chờ confirm): install/gỡ dependency, migration/seed/drop DB, destructive ops (`rm -rf`, `git reset --hard`, force push), phát hiện ngoài scope, Intent thiếu thông tin, test/acceptance fail, bug ở ST khác đã Done.
+
+**Reopen task đã Done:** Có feedback/bug mới sau khi task đã `Done` → chạy lại `/ai-plan-edit`. Nó tự reset `tracking.md` → `In Progress`, `spec.md` → `Draft`, và tạo ST mới cho bug (không sửa ST cũ).
 
 ### Ví dụ thực tế: Feature "thêm tính năng đăng nhập"
 
@@ -111,6 +113,7 @@ git checkout -b feat/user-login
 | `## Intent` trong spec.md không bao giờ bị sửa | Là nguồn gốc, không được drift |
 | Subtask đã Done không bị xóa | Lịch sử không thể xóa |
 | Comment WHY ở luồng phức tạp, không comment WHAT | Code rõ rồi — chỉ note phần non-obvious |
+| Task Done + bug/feedback mới → reopen qua `/ai-plan-edit`, tạo ST mới (không sửa ST cũ) | Audit trail rõ, ST Done là bất biến |
 
 ---
 
@@ -153,6 +156,8 @@ Cũng dùng để **cập nhật plan** khi scope thay đổi giữa chừng.
 
 **Approve:** Gõ `"ok"` hoặc feedback cụ thể để điều chỉnh.
 
+**Reopen:** Nếu task đã `status: Done` và có feedback/bug mới — tự reset `tracking.md` → `In Progress`, `spec.md` → `Draft`. Bug ở 1 ST cụ thể đã Done → tạo ST mới tham chiếu (`Fix bug ở ST-X`), không sửa ST cũ.
+
 **Lưu ý:** Chỉ ghi vào `spec.md` và `tracking.md`, không chạm vào code.
 
 ---
@@ -184,6 +189,7 @@ Cũng dùng để **cập nhật plan** khi scope thay đổi giữa chừng.
 | Migration / seed / drop / truncate / alter DB | In SQL/command, chờ "ok" |
 | `rm -rf`, `git reset --hard`, force push, xóa branch | In command, chờ "ok" |
 | Phát hiện ngoài scope ST | Ghi Changelog, hỏi: thêm ST mới hay skip? |
+| Phát hiện bug ở ST khác đã ✅ Done | Dừng, đề xuất `/ai-plan-edit` tạo ST mới — không tự sửa ST cũ |
 | Intent thiếu thông tin để quyết định | Hỏi cụ thể, không tự assume |
 | Test fail / acceptance không pass | In log, hỏi: debug / rollback / skip? |
 
@@ -240,6 +246,8 @@ Sau đó chạy `/ai-plan-edit` để generate plan dựa trên findings này.
 3. **Fix** — impact analysis callers, verify root cause, regression check callers và test bao phủ (hoặc thông báo danh sách cần test thủ công)
 
 **Nguyên tắc:** Không sửa nhiều thứ cùng lúc — 1 hypothesis → 1 fix → 1 verify.
+
+**Sync task:** Nếu branch hiện tại có active task (`tracking.md` `status: In Progress`) → tự append Changelog vào `tracking.md` sau khi fix xong. Không có active task → bỏ qua, không tạo file mới.
 
 ---
 
@@ -506,4 +514,4 @@ Nếu bạn sửa skill global và muốn giữ khi update: đặt version riên
 
 ---
 
-*ai-code-kit v1.5.0*
+*ai-code-kit v1.6.0*
