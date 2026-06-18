@@ -43,8 +43,18 @@ if [ "$IS_FORCE" = true ]; then
   exit 0
 fi
 
+# ── DB client invocation guard (cho Pattern 3 & 4) ────────────────────────────
+# SQL chỉ thực sự CHẠY khi đi qua 1 DB client/migration tool. Nếu không, chữ
+# DROP/DELETE/UPDATE chỉ là text thường (commit message, comment, doc...) —
+# tránh false-positive bằng cách chỉ check khi command có gọi 1 trong các tool sau.
+IS_DB_INVOKE=false
+if echo "$COMMAND" | grep -qE '\b(psql|mysql|mariadb|sqlite3|mongosh|mongo|redis-cli|sqlcmd|osql)\b'; then
+  IS_DB_INVOKE=true
+fi
+
 # ── Pattern 3: Destructive SQL không có WHERE ─────────────────────────────────
-if echo "$COMMAND" | grep -qiE '(DELETE\s+FROM|UPDATE\s+\w+\s+SET)' \
+if [ "$IS_DB_INVOKE" = true ] \
+   && echo "$COMMAND" | grep -qiE '(DELETE\s+FROM|UPDATE\s+\w+\s+SET)' \
    && ! echo "$COMMAND" | grep -qi 'WHERE'; then
   echo "[safety-guard] BLOCKED: Destructive SQL không có WHERE clause" >&2
   echo "  Thêm WHERE clause hoặc confirm intentional." >&2
@@ -52,7 +62,8 @@ if echo "$COMMAND" | grep -qiE '(DELETE\s+FROM|UPDATE\s+\w+\s+SET)' \
 fi
 
 # ── Pattern 4: DROP TABLE / DROP DATABASE ────────────────────────────────────
-if echo "$COMMAND" | grep -qiE 'DROP\s+(TABLE|DATABASE|SCHEMA)'; then
+if [ "$IS_DB_INVOKE" = true ] \
+   && echo "$COMMAND" | grep -qiE 'DROP\s+(TABLE|DATABASE|SCHEMA)'; then
   echo "[safety-guard] BLOCKED: DROP statement detected" >&2
   echo "  Command: $COMMAND" >&2
   echo "  Destructive — confirm intentional trước khi proceed." >&2

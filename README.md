@@ -283,9 +283,11 @@ Khi bị chặn:
 |---------|-----------------|
 | `rm -rf /`, `rm -rf *`, `rm -rf .` | `git push --force` lên branch khác |
 | `git push --force` lên main/master/develop | |
-| `DELETE FROM` không có `WHERE` | |
-| `UPDATE ... SET` không có `WHERE` | |
-| `DROP TABLE` / `DROP DATABASE` / `DROP SCHEMA` | |
+| `DELETE FROM` không có `WHERE` (qua `psql`/`mysql`/`mariadb`/`sqlite3`/`mongosh`/`mongo`/`redis-cli`/`sqlcmd`/`osql`) | |
+| `UPDATE ... SET` không có `WHERE` (qua các DB client trên) | |
+| `DROP TABLE` / `DROP DATABASE` / `DROP SCHEMA` (qua các DB client trên) | |
+
+3 pattern SQL trên chỉ check khi command thực sự gọi 1 DB client — tránh false-positive khi chữ DROP/DELETE/UPDATE chỉ là text (commit message, comment, doc...).
 
 ### `session-init` — Nhắc task đang làm
 
@@ -516,4 +518,4 @@ Nếu bạn sửa skill global và muốn giữ khi update: đặt version riên
 
 ---
 
-*ai-code-kit v1.6.1*
+*ai-code-kit v1.6.2*

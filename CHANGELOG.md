@@ -1,5 +1,10 @@
 # Changelog
 
+## [1.6.2] — 2026-06-19
+
+### Fixed
+- `safety-guard.sh`: Pattern 3 (`DELETE`/`UPDATE` thiếu `WHERE`) và Pattern 4 (DROP statement) block nhầm khi chữ đó chỉ là text thường (ví dụ commit message mô tả bug) vì hook chỉ grep chuỗi thô, không phân biệt text với SQL thật. Thêm guard: 2 pattern này chỉ check khi command có gọi 1 DB client thật (`psql`/`mysql`/`mariadb`/`sqlite3`/`mongosh`/`mongo`/`redis-cli`/`sqlcmd`/`osql`).
+
 ## [1.6.1] — 2026-06-19
 
 ### Fixed
