@@ -6,6 +6,8 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 Đây là **source** cho `~/.claude/skills/*` và `~/.claude/hooks/*` của user — không phải project code thường. Sửa file trong repo này **không có hiệu lực** cho đến khi chạy lại `install.sh`. Repo deploy ra `~/.claude/` của user, các project khác trên máy đều dùng skills/hooks này (project có thể override bằng `.claude/skills/<name>/` riêng).
 
+⚠️ **Ngoại lệ:** khi làm việc *trong chính thư mục `ai-code-kit/`*, skill scoped tại đây (`.claude/skills/<name>/`) được ưu tiên hơn bản global — nghĩa là bạn đang chạy bản **source chưa install**, có thể khác bản đã deploy ở các project khác. Sau khi sửa SKILL.md/hook, chạy `install.sh` ngay để tránh nhầm "đang test bản nào".
+
 ## Commands
 
 ```bash

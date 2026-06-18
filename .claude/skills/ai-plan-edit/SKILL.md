@@ -1,6 +1,12 @@
 ---
 name: ai-plan-edit
 description: Đọc Intent trong spec.md và generate Subtasks, Risks, Success Criteria. Dùng sau khi nhập mô tả vào ## Intent, hoặc khi cần cập nhật plan.
+allowed-tools:
+  - Read
+  - Edit
+  - Glob
+  - Grep
+  - Bash(git branch --show-current)
 ---
 
 # Lập Kế Hoạch Implementation

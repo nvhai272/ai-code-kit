@@ -53,10 +53,10 @@ fi
 
 # ── Pattern 4: DROP TABLE / DROP DATABASE ────────────────────────────────────
 if echo "$COMMAND" | grep -qiE 'DROP\s+(TABLE|DATABASE|SCHEMA)'; then
-  echo "[safety-guard] WARNING: DROP statement detected" >&2
+  echo "[safety-guard] BLOCKED: DROP statement detected" >&2
   echo "  Command: $COMMAND" >&2
-  echo "  Đây có phải migration đã được review?" >&2
-  exit 0
+  echo "  Destructive — confirm intentional trước khi proceed." >&2
+  exit 2
 fi
 
 exit 0

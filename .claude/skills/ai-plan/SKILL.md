@@ -1,6 +1,10 @@
 ---
 name: ai-plan
 description: Khởi tạo task mới cho branch hiện tại. Tạo spec.md + tracking.md trong ai-code-kit/tasks/. Dùng khi bắt đầu feature hoặc task mới.
+allowed-tools:
+  - Glob
+  - Write
+  - Bash(git branch --show-current)
 ---
 
 # Khởi Tạo Task

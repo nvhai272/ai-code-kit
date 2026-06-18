@@ -25,7 +25,7 @@ Path: `ai-code-kit/tasks/{branch-slug}/report.html`. Nếu chưa tồn tại →
 Lặp cho đến khi hết ST `⬜ Pending` hoặc gặp hard-stop. Với mỗi ST:
 
 1. Check Dependencies — ST cha phải Done. Chưa xong → skip, log "blocked by ST-X".
-2. Báo 1 dòng: **"▶ ST-N: {tên}"**
+2. Báo: **"▶ ST-N: {tên}"** kèm danh sách `Files:` lấy từ spec.md của ST đó (báo trước khi sửa, không chờ tới report.html).
 3. **Đọc files liên quan + grep usages** để hiểu impact (bắt buộc với symbol public).
 4. **Implement**:
    - Minimal diff, đúng scope ST.
