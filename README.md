@@ -174,6 +174,7 @@ Cũng dùng để **cập nhật plan** khi scope thay đổi giữa chừng.
 **Quá trình (auto loop, không hỏi giữa các ST):**
 1. Khởi tạo `report.html` (1 lần) trong `ai-code-kit/tasks/{slug}/`
 2. Lặp qua ST `⬜ Pending` theo thứ tự. Với mỗi ST:
+   - Báo `▶ ST-N` kèm danh sách Files sẽ đổi (trước khi sửa)
    - Đọc files + grep usages (impact analysis)
    - Implement minimal diff. **Comment WHY** ở luồng phức tạp.
    - Chạy test nếu project có config; verify acceptance
@@ -280,10 +281,11 @@ Khi bị chặn:
 
 | Bị chặn | Cảnh báo (allow) |
 |---------|-----------------|
-| `rm -rf /`, `rm -rf *`, `rm -rf .` | `DROP TABLE` (cảnh báo, hỏi) |
-| `git push --force` lên main/master/develop | `git push --force` lên branch khác |
+| `rm -rf /`, `rm -rf *`, `rm -rf .` | `git push --force` lên branch khác |
+| `git push --force` lên main/master/develop | |
 | `DELETE FROM` không có `WHERE` | |
 | `UPDATE ... SET` không có `WHERE` | |
+| `DROP TABLE` / `DROP DATABASE` / `DROP SCHEMA` | |
 
 ### `session-init` — Nhắc task đang làm
 
@@ -514,4 +516,4 @@ Nếu bạn sửa skill global và muốn giữ khi update: đặt version riên
 
 ---
 
-*ai-code-kit v1.6.0*
+*ai-code-kit v1.6.1*

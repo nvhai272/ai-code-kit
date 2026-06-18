@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.6.1] — 2026-06-19
+
+### Fixed
+- `safety-guard.sh`: `DROP TABLE`/`DROP DATABASE`/`DROP SCHEMA` chỉ cảnh báo (`exit 0`, vẫn cho chạy) trong khi `DELETE`/`UPDATE` thiếu `WHERE` đã bị block (`exit 2`) — không nhất quán mức rủi ro. Đổi DROP statement sang block cứng.
+- `ai-plan`, `ai-plan-edit`: thiếu `allowed-tools` trong frontmatter dù skill tự khai chỉ ghi `spec.md`/`tracking.md` — thêm `allowed-tools` giới hạn đúng phạm vi đã khai báo.
+- `ai-plan-do`: danh sách file bị ảnh hưởng của 1 ST chỉ xuất hiện trong `report.html` sau khi đã implement xong — giờ báo kèm khi announce `▶ ST-N`, trước khi sửa code.
+- `CLAUDE.md`: bổ sung cảnh báo khi làm việc trong chính thư mục `ai-code-kit/`, skill scoped tại đây ưu tiên hơn bản global nên có thể đang chạy bản source chưa `install.sh`.
+
 ## [1.6.0] — 2026-06-17
 
 ### Added
