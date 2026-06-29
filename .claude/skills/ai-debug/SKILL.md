@@ -2,6 +2,8 @@
 name: ai-debug
 description: Debug có hệ thống theo quy trình Observe → Hypothesize → Fix. Dùng khi gặp lỗi, test fail, hoặc behavior bất thường.
 argument-hint: "[mô tả vấn đề]"
+# allowed-tools: cố ý bỏ trống — debug cần đọc/grep/git/sửa code nên cần full quyền.
+# Lớp an toàn là hard-stop ở Phase 3 (install/migration/destructive/ngoài scope).
 ---
 
 # Debug Có Hệ Thống

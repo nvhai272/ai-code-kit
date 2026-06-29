@@ -6,12 +6,18 @@
 
 INPUT=$(cat)
 
-# Extract tool_name
+# Extract tool_name — jq, fallback bash grep nếu jq thiếu/lỗi (tránh fail-open)
 TOOL_NAME=$(echo "$INPUT" | jq -r '.tool_name // ""' 2>/dev/null)
+if [ -z "$TOOL_NAME" ]; then
+  TOOL_NAME=$(echo "$INPUT" | grep -o '"tool_name":"[^"]*"' | head -1 | cut -d'"' -f4 2>/dev/null || true)
+fi
 [ "$TOOL_NAME" != "Read" ] && exit 0
 
-# Extract file_path
+# Extract file_path — jq, fallback bash grep
 FILE_PATH=$(echo "$INPUT" | jq -r '.tool_input.file_path // ""' 2>/dev/null)
+if [ -z "$FILE_PATH" ]; then
+  FILE_PATH=$(echo "$INPUT" | grep -o '"file_path":"[^"]*"' | head -1 | cut -d'"' -f4 2>/dev/null || true)
+fi
 [ -z "$FILE_PATH" ] && exit 0
 
 BASENAME=$(basename "$FILE_PATH")

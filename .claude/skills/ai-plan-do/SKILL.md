@@ -1,6 +1,8 @@
 ---
 name: ai-plan-do
 description: Thực hiện task từ spec.md theo thứ tự subtask. Auto-execute liên tục, chỉ dừng ở hard-stop. Sinh report.html cumulative để review trực quan.
+# allowed-tools: cố ý bỏ trống — skill này implement code nên cần full quyền
+# (Read/Edit/Write/Bash/Grep/Glob). Hard-stop trong Bước 5 mới là lớp chặn an toàn.
 ---
 
 # Thực Hiện Implementation (Auto-Execute)

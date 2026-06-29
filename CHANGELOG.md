@@ -1,5 +1,22 @@
 # Changelog
 
+## [1.7.0] — 2026-06-30
+
+### Added
+- `safety-guard.sh`: **Pattern 5** — chặn đọc/copy file nhạy cảm qua Bash (`cat .env`, `cat id_rsa`, `cp server.pem ...`). `privacy-block.sh` chỉ chặn tool Read nên Bash là lỗ bypass. Match tên file cụ thể (`.env[.*]`, `*.pem/key/p12/pfx/jks`, `id_rsa/ed25519/ecdsa/dsa`, `.npmrc/.netrc/.pgpass/.pypirc`), bỏ qua file mẫu an toàn (`*.example/*.sample/*.template`).
+
+### Fixed
+- `privacy-block.sh` + `safety-guard.sh`: **fail-open** khi `jq` thiếu/lỗi → biến rỗng → cho lệnh qua. Thêm fallback bash grep để vẫn parse được `tool_name`/`file_path`/`command` mà không phụ thuộc hoàn toàn vào `jq`.
+- `safety-guard.sh` Pattern 1 (`rm`): trước chỉ bắt `-rf`/`-fr` liền sau `rm` và path `/|*|.`. Bỏ sót `rm -r -f` (cờ tách rời), `--recursive`, và path `~`/`$HOME`/thư mục hệ thống (`/etc`, `/usr`, `/bin`...). Viết lại: bắt cờ recursive ở mọi thứ tự + mở rộng danh sách path nguy hiểm. Thư mục hệ thống chỉ chặn khi là **target trực tiếp** (vd `rm -rf /home`), không chặn subpath (`rm -rf /home/user/project/node_modules` vẫn được phép) — tránh false-positive với mọi thao tác dưới `/home`.
+- `safety-guard.sh` git push force: dò branch protected bằng grep chuỗi con → false-positive (vd `git push origin feature/dev-tools --force` bị chặn nhầm vì dính chữ `dev`). Đổi sang chỉ match branch khi là token độc lập.
+- `ai-research`: `allowed-tools` chỉ cho `Bash(git/ls/wc)` nhưng phần thân hướng dẫn chạy `grep -r` → bị chặn. Thêm `Bash(grep *)` cho khớp.
+- `install.sh`: bước pre-clean lọc bỏ command ai-code-kit nhưng để lại matcher rỗng (`{matcher, hooks:[]}`), nên mỗi lần cài lại tích thêm 1 stub rỗng vào `settings.json` (nguồn gốc dead-config tích lũy). Drop luôn matcher có `.hooks` rỗng sau khi lọc.
+
+### Changed
+- `ai-plan-do`, `ai-debug`: thêm comment frontmatter ghi rõ chủ đích bỏ trống `allowed-tools` (skill cần full quyền để implement/sửa code; hard-stop mới là lớp chặn an toàn) — tránh hiểu nhầm là thiếu sót.
+- `CLAUDE.md`: cập nhật mô tả hành vi `safety-guard` cho khớp Pattern 1 mở rộng + Pattern 5.
+- `install.sh`: bỏ tạo backup timestamped (`skills.bak.*` + `settings.json.bak.*`) mỗi lần cài — trước đây tích lũy thành rác trong `~/.claude/`. (Nếu cần khôi phục, dùng git lịch sử của repo này.)
+
 ## [1.6.2] — 2026-06-19
 
 ### Fixed

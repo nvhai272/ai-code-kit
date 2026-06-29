@@ -6,6 +6,7 @@ allowed-tools:
   - Read
   - Grep
   - Glob
+  - Bash(grep *)
   - Bash(git log *)
   - Bash(git diff *)
   - Bash(git blame *)

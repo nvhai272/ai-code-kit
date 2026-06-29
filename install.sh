@@ -23,14 +23,7 @@ echo "────────────────────────�
 command -v jq >/dev/null 2>&1 || fail "jq không tìm thấy. Chạy: sudo apt install jq"
 ok "jq found"
 
-# ── 2. Backup skills hiện có ──────────────────────────────────────────────────
-if [ -d "$CLAUDE_DIR/skills" ]; then
-  BACKUP="$CLAUDE_DIR/skills.bak.$(date +%Y%m%d%H%M%S)"
-  cp -r "$CLAUDE_DIR/skills" "$BACKUP"
-  warn "Backup skills cũ → $BACKUP"
-fi
-
-# ── 2b. Xóa skills cũ (tên cũ trước prefix + skill đã bỏ ở version mới) ──────
+# ── 2. Xóa skills cũ (tên cũ trước prefix + skill đã bỏ ở version mới) ──────
 # - plan/plan-edit/.../research: tên cũ trước khi đổi prefix ai- (v1.3.0)
 # - ai-review/ai-think: đã bỏ ở v1.4.0
 LEGACY_SKILLS=(plan plan-edit plan-do review debug think research ai-review ai-think)
@@ -66,19 +59,21 @@ ok "Hooks đã cài: $(ls "$CLAUDE_DIR/hooks/"*.sh | xargs -I{} basename {} | tr
 # ── 5. Merge hook config vào settings.json ────────────────────────────────────
 [ -f "$SETTINGS" ] || echo '{}' > "$SETTINGS"
 
-# Backup settings trước khi merge
-cp "$SETTINGS" "$SETTINGS.bak.$(date +%Y%m%d%H%M%S)"
-
 # Pre-clean: xóa ai-code-kit hooks cũ trong settings (tránh dupe khi cài lại)
+# Sau khi lọc command, PHẢI drop luôn matcher có .hooks rỗng — nếu không sẽ để lại
+# stub `{matcher, hooks:[]}` tích lũy mỗi lần cài (nguồn gốc dead-config).
 jq '
   if .hooks then
     .hooks |= (
       to_entries |
       map(
-        .value |= map(
-          .hooks |= map(
-            select(.command | test("claude/hooks/(privacy-block|safety-guard|session-init)") | not)
+        .value |= (
+          map(
+            .hooks |= map(
+              select(.command | test("claude/hooks/(privacy-block|safety-guard|session-init)") | not)
+            )
           )
+          | map(select((.hooks | length) > 0))
         ) |
         select((.value | length) > 0)
       ) |

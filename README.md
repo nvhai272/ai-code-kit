@@ -518,4 +518,4 @@ Nếu bạn sửa skill global và muốn giữ khi update: đặt version riên
 
 ---
 
-*ai-code-kit v1.6.2*
+*ai-code-kit v1.7.0*

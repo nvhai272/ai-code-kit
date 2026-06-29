@@ -36,7 +36,7 @@ ai-code-kit/
 
 **Hooks (3):**
 - `privacy-block` (PreToolUse:Read) — chặn đọc `.env`, `*.pem`, `credentials/*`
-- `safety-guard` (PreToolUse:Bash) — chặn `rm -rf /|*|.`, force push lên main, SQL không WHERE
+- `safety-guard` (PreToolUse:Bash) — chặn `rm` recursive nhắm `/|*|.|~|$HOME|thư mục hệ thống`, force push lên protected branch, SQL không WHERE / DROP, và đọc file nhạy cảm qua Bash (`cat .env`...)
 - `session-init` (UserPromptSubmit) — scan `ai-code-kit/tasks/*/tracking.md` cho `status: In Progress`, inject 1 lần/session
 
 ## Invariants khi sửa
