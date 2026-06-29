@@ -277,16 +277,21 @@ Khi bị chặn:
 
 **Override:** Gõ rõ ràng trong prompt: *"Đọc .env.production để kiểm tra cấu hình"* — Claude sẽ hỏi xác nhận thay vì tự chặn.
 
+> `privacy-block` chỉ chặn **tool Read**. Đọc cùng file qua Bash (`cat .env`, `cat id_rsa`...) được chặn bởi `safety-guard` (xem bên dưới).
+
 ### `safety-guard` — Chặn lệnh nguy hiểm
 
 | Bị chặn | Cảnh báo (allow) |
 |---------|-----------------|
-| `rm -rf /`, `rm -rf *`, `rm -rf .` | `git push --force` lên branch khác |
-| `git push --force` lên main/master/develop | |
+| `rm` recursive (`-r`/`-rf`/`--recursive`) nhắm `/`, `*`, `.`, `~`, `$HOME`, hoặc thư mục hệ thống là target trực tiếp (`/etc`, `/usr`, `/home`...) | `git push --force` lên branch thường |
+| `git push --force`/`-f` lên protected branch (`main`/`master`/`develop`/`dev`/`release`) | |
+| Đọc/copy file nhạy cảm qua Bash: `cat .env`, `cat id_rsa`, `cp *.pem ...` (bịt lỗ vì `privacy-block` chỉ chặn tool Read) | |
 | `DELETE FROM` không có `WHERE` (qua `psql`/`mysql`/`mariadb`/`sqlite3`/`mongosh`/`mongo`/`redis-cli`/`sqlcmd`/`osql`) | |
 | `UPDATE ... SET` không có `WHERE` (qua các DB client trên) | |
 | `DROP TABLE` / `DROP DATABASE` / `DROP SCHEMA` (qua các DB client trên) | |
 
+`rm` chỉ chặn thư mục hệ thống khi là **target trực tiếp** (`rm -rf /home`) — subpath như `rm -rf /home/user/project/node_modules` vẫn được phép.
+Pattern bắt branch protected match theo **token độc lập**, nên `git push origin feature/dev-tools --force` không bị chặn nhầm vì dính chữ `dev`.
 3 pattern SQL trên chỉ check khi command thực sự gọi 1 DB client — tránh false-positive khi chữ DROP/DELETE/UPDATE chỉ là text (commit message, comment, doc...).
 
 ### `session-init` — Nhắc task đang làm
