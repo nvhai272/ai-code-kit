@@ -28,7 +28,7 @@ Bộ skills + hooks cá nhân cho [Claude Code](https://claude.ai/code), tối �
 sudo apt install jq
 
 # 2. Clone toolkit
-git clone https://github.com/<your-username>/ai-code-kit.git ~/projects/ai-code-kit
+git clone https://github.com/nvhai272/ai-code-kit.git ~/projects/ai-code-kit
 
 # 3. Cài vào ~/.claude/
 cd ~/projects/ai-code-kit
@@ -505,7 +505,7 @@ cd ~/projects/ai-code-kit
 gh repo create ai-code-kit --public --source=. --remote=origin --push
 
 # Hoặc thủ công
-git remote add origin https://github.com/<username>/ai-code-kit.git
+git remote add origin https://github.com/nvhai272/ai-code-kit.git
 git push -u origin main
 ```
 
